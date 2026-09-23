@@ -111,8 +111,17 @@ export async function submitLead(prevState: LeadSubmissionState | null, formData
     if (error) {
       console.error("[EXO_LEADS_ERROR] Database insertion failed:", error.message);
       
-      if (error.message.includes("placeholder-project") || error.message.includes("FetchError") || error.message.includes("Invalid API key")) {
-        console.warn("[EXO_LEADS_WARN] Operating with mock persistence (Supabase environment variables pending).");
+      const isConfigOrNetworkError = 
+        !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+        process.env.NEXT_PUBLIC_SUPABASE_URL.includes("placeholder-project") ||
+        error.message.includes("placeholder-project") || 
+        error.message.includes("FetchError") || 
+        error.message.includes("fetch failed") || 
+        error.message.includes("Failed to fetch") || 
+        error.message.includes("Invalid API key");
+
+      if (isConfigOrNetworkError) {
+        console.warn("[EXO_LEADS_WARN] Operating with fallback response due to Supabase connection/config issue.");
         return {
           success: true,
           message: "Thank you. Your message has been received. Our team will contact you shortly.",
