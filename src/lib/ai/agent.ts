@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "@/lib/supabase/types";
+import { sendLeadEmailToClient } from "@/lib/email/send-email";
 
 export interface AIAnalysisResult {
   aiScore: number;
@@ -37,19 +38,21 @@ export async function processLeadWithAI(leadId: string, leadData: {
 
     if (apiKey) {
       try {
-        const prompt = `You are the lead AI Engineer and Solutions Consultant for Exo Advance LLC, a high-tech software and technology agency specializing in Restaurant Technology, Software Development, Business Intelligence, and Custom Software Solutions.
+        const prompt = `You are the Lead Solutions Architect and AI Technical Consultant for Exo Advance LLC, a high-tech software engineering agency specializing in Restaurant Technology, Software Development, Business Intelligence, and Custom Software.
 
 Analyze the following prospective client lead:
-- Name: ${leadData.full_name}
+- Client Name: ${leadData.full_name}
 - Company: ${leadData.company || "N/A"}
-- Service of Interest: ${leadData.service}
-- Message: "${leadData.message}"
+- Service Requested: ${leadData.service}
+- Client Message: "${leadData.message}"
 
-Return a valid JSON object with the following exact keys:
-1. "aiScore": a number from 1 to 100 based on lead quality and budget indicators.
+Your task is to generate an automated follow-up email that warmly acknowledges their request and asks 3-4 specific, highly relevant technical and operational follow-up questions to gather critical project details (such as current stack, project scope, key features, budget/timeline, or integrations needed).
+
+Return a valid JSON object with the exact keys:
+1. "aiScore": a number from 1 to 100 based on lead quality and enterprise potential.
 2. "sentiment": one of ["Urgent", "High Interest", "Standard Inquiry", "Exploring"].
-3. "intentSummary": a concise 1-2 sentence summary of what the client needs.
-4. "recommendedResponse": a professional, warm, and highly personalized email response from Exo Advance addressing their specific project goals.`;
+3. "intentSummary": a concise 1-2 sentence summary of what the client is asking for.
+4. "recommendedResponse": a polished, professional email response addressed to ${leadData.full_name}, acknowledging their inquiry and asking 3-4 precise follow-up questions to request more details about their project.`;
 
         const response = await fetch("https://api.openai.com/v1/chat/completions", {
           method: "POST",
@@ -88,7 +91,7 @@ Return a valid JSON object with the following exact keys:
     const supabase = getSupabaseBackendClient();
 
     // Insert AI response into interactions table
-    await supabase.from("interactions").insert({
+    const { error: aiIntErr } = await supabase.from("interactions").insert({
       lead_id: leadId,
       type: "ai_response",
       content: aiResult.recommendedResponse,
@@ -100,6 +103,22 @@ Return a valid JSON object with the following exact keys:
         engine: apiKey ? "openai-gpt-4o-mini" : "exo-ai-rules-v1",
       },
     });
+
+    if (aiIntErr) {
+      console.error("[EXO_AI_AGENT_INSERT_ERROR] Failed to save AI response interaction:", aiIntErr.message, aiIntErr);
+    }
+
+    // Automatically send response email to client
+    try {
+      await sendLeadEmailToClient({
+        toEmail: leadData.email,
+        clientName: leadData.full_name,
+        service: leadData.service,
+        aiResponseContent: aiResult.recommendedResponse,
+      });
+    } catch (emailErr) {
+      console.error("[EXO_AI_EMAIL_DISPATCH_ERROR]", emailErr);
+    }
 
     // Update lead status & notes with AI insights
     await supabase
@@ -124,7 +143,8 @@ function generateContextualFallback(leadData: {
   full_name: string;
   company?: string | null;
   service: string;
-  message: string;}): AIAnalysisResult {
+  message: string;
+}): AIAnalysisResult {
   const msgLower = leadData.message.toLowerCase();
   let score = 75;
   let sentiment: AIAnalysisResult["sentiment"] = "Standard Inquiry";
@@ -140,14 +160,32 @@ function generateContextualFallback(leadData: {
   const companyMention = leadData.company ? ` at ${leadData.company}` : "";
   
   let serviceSpecificText = "";
+  let followUpQuestions = "";
+
   if (leadData.service.includes("Restaurant")) {
     serviceSpecificText = "Our specialized POS integrations, automated kitchen operations, and analytics tools are built to streamline high-volume hospitality environments.";
+    followUpQuestions = `To help us prepare a tailored proposal, could you share a few more details:
+1. What POS or kitchen ordering system are you currently using (or planning to implement)?
+2. How many locations or active terminals will require integration?
+3. What are your main operational bottlenecks (e.g., order sync speed, inventory tracking, mobile ordering)?`;
   } else if (leadData.service.includes("Software")) {
     serviceSpecificText = "We architect scalable cloud-native web applications, mobile platforms, and high-performance microservices tailored to high-growth businesses.";
+    followUpQuestions = `To help us design the right software architecture, could you clarify:
+1. Is this a new custom application from scratch, or an upgrade to an existing platform?
+2. What target platforms are required (Web, Mobile iOS/Android, Desktop, or Cloud Backend API)?
+3. What is your estimated launch timeline or key milestone target?`;
   } else if (leadData.service.includes("Business Intelligence")) {
     serviceSpecificText = "Our custom BI dashboards, predictive AI modeling, and data warehouse pipelines transform raw operational data into real-time decision-making assets.";
+    followUpQuestions = `To help us build your data intelligence pipeline, could you share:
+1. What primary data sources or databases will need to be connected (e.g., PostgreSQL, BigQuery, Shopify, ERP)?
+2. What key KPIs or real-time metrics do you want visible on your executive dashboard?
+3. How many active team members or managers will need dashboard access?`;
   } else {
     serviceSpecificText = "Exo Advance specializes in custom end-to-end technology architectures tailored specifically to complex enterprise workflows.";
+    followUpQuestions = `To help us evaluate your project requirements, could you provide:
+1. What are the main features or core capabilities required for the platform?
+2. Are there any existing third-party APIs or external tools that must be integrated?
+3. What is your target timeline or start date for development?`;
   }
 
   const recommendedResponse = `Dear ${leadData.full_name},
@@ -156,7 +194,11 @@ Thank you for reaching out to Exo Advance LLC regarding your inquiry on ${leadDa
 
 ${serviceSpecificText}
 
-Based on your message ("${leadData.message.slice(0, 120)}${leadData.message.length > 120 ? "..." : ""}"), an Exo Advance Senior Software Architect has been assigned to your request and will follow up with you within 24 hours with a custom technical proposal and project timeline.
+To ensure our Senior Software Architect can prepare an accurate technical proposal and project scope for you, could you please provide a bit more context on the following points?
+
+${followUpQuestions}
+
+Once you reply with these details, our engineering team will deliver a comprehensive project blueprint and estimated timeline within 24 hours.
 
 Best regards,
 The Exo Advance AI & Engineering Team

@@ -163,7 +163,7 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
 
           {/* Status Filter Tabs (Scrollable on small mobile) */}
           <div className="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1.5 md:pb-0 font-mono text-xs no-scrollbar flex-nowrap shrink-0">
-            {["all", "new", "ai_processed", "contacted", "qualified", "closed"].map((statusKey) => (
+            {["all", "new", "ai_processed", "contacted", "qualified", "closed", "archived"].map((statusKey) => (
               <button
                 key={statusKey}
                 onClick={() => setSelectedStatus(statusKey)}
@@ -260,10 +260,14 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
                               ? "bg-blue-500/20 text-blue-400 border-blue-500/40"
                               : lead.status === "ai_processed"
                               ? "bg-purple-500/20 text-purple-300 border-purple-500/40"
+                              : lead.status === "contacted"
+                              ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/40"
                               : lead.status === "qualified"
                               ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                               : lead.status === "closed"
                               ? "bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]/40"
+                              : lead.status === "archived"
+                              ? "bg-slate-500/20 text-slate-400 border-slate-500/40"
                               : "bg-slate-800 text-slate-400 border-slate-700"
                           }`}
                         >
@@ -343,10 +347,14 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
                                   ? "bg-blue-500/20 text-blue-400 border-blue-500/40"
                                   : lead.status === "ai_processed"
                                   ? "bg-purple-500/20 text-purple-300 border-purple-500/40"
+                                  : lead.status === "contacted"
+                                  ? "bg-yellow-500/20 text-yellow-400 border-yellow-500/40"
                                   : lead.status === "qualified"
                                   ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
                                   : lead.status === "closed"
                                   ? "bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]/40"
+                                  : lead.status === "archived"
+                                  ? "bg-slate-500/20 text-slate-400 border-slate-500/40"
                                   : "bg-slate-800 text-slate-400 border-slate-700"
                               }`}
                             >

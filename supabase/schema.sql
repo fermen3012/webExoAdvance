@@ -16,6 +16,23 @@ CREATE TABLE IF NOT EXISTS public.leads (
   notes TEXT
 );
 
+-- Fix lead_status ENUM or column type in Supabase if restricted
+DO $$
+BEGIN
+  IF EXISTS (SELECT 1 FROM pg_type WHERE typname = 'lead_status') THEN
+    ALTER TYPE public.lead_status ADD VALUE IF NOT EXISTS 'ai_processed';
+  END IF;
+EXCEPTION
+  WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$
+BEGIN
+  ALTER TABLE public.leads ALTER COLUMN status TYPE TEXT USING status::TEXT;
+EXCEPTION
+  WHEN OTHERS THEN NULL;
+END $$;
+
 -- Ensure all required columns exist
 ALTER TABLE public.leads ADD COLUMN IF NOT EXISTS full_name TEXT;
 ALTER TABLE public.leads ADD COLUMN IF NOT EXISTS company TEXT;
@@ -61,6 +78,21 @@ ALTER TABLE public.interactions ADD COLUMN IF NOT EXISTS content TEXT;
 ALTER TABLE public.interactions ADD COLUMN IF NOT EXISTS metadata JSONB DEFAULT '{}'::jsonb;
 ALTER TABLE public.interactions ADD COLUMN IF NOT EXISTS sentiment TEXT;
 ALTER TABLE public.interactions ADD COLUMN IF NOT EXISTS ai_score NUMERIC;
+
+-- Fix legacy NOT NULL constraints on interactions table if present
+DO $$
+BEGIN
+  ALTER TABLE public.interactions ALTER COLUMN direction DROP NOT NULL;
+EXCEPTION
+  WHEN OTHERS THEN NULL;
+END $$;
+
+DO $$
+BEGIN
+  ALTER TABLE public.interactions ALTER COLUMN created_by DROP NOT NULL;
+EXCEPTION
+  WHEN OTHERS THEN NULL;
+END $$;
 
 -- Enable Row Level Security
 ALTER TABLE public.interactions ENABLE ROW LEVEL SECURITY;

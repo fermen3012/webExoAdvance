@@ -136,7 +136,7 @@ export async function submitLead(prevState: LeadSubmissionState | null, formData
 
     if (insertedLead?.id) {
       // 5. Create initial interaction record for the customer's message
-      await supabase.from("interactions").insert({
+      const { error: intErr } = await supabase.from("interactions").insert({
         lead_id: insertedLead.id,
         type: "website_inquiry",
         content: message,
@@ -145,6 +145,10 @@ export async function submitLead(prevState: LeadSubmissionState | null, formData
           company: company || null,
         },
       });
+
+      if (intErr) {
+        console.error("[EXO_LEADS_INTERACTION_ERROR] Failed to save website inquiry interaction:", intErr.message, intErr);
+      }
 
       // 6. Automatically process lead with AI Agent
       try {
