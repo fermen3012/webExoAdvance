@@ -1,20 +1,26 @@
 {
   "project": "website-exoadvance",
   "domain": "Plataforma website exoadvance",
-  "updated_at": "2026-10-23T22:18:21.369Z",
-  "active_version": "1.0.0",
+  "updated_at": "2026-10-23T23:46:25.000Z",
+  "active_version": "1.1.0",
   "milestones": [
     {
       "id": "M01",
       "description": "Inicialización del Ecosistema Multi-Agente y Memoria Persistente de Grafo",
       "status": "COMPLETED",
       "verification": "Estructura .agents/ y AGENTS.md verificados y activos"
+    },
+    {
+      "id": "M02",
+      "description": "Transformación Comercial de Copywriting, Botones de Live Demo y Optimización SEO B2B SaaS",
+      "status": "COMPLETED",
+      "verification": "QA Gate PASS, push a origin/main (commit f3ee4a0)"
     }
   ],
   "in_progress": [],
   "priorities": [
-    "Mapear módulos y dependencias iniciales en graph.json",
-    "Definir invariantes específicas del dominio del proyecto en invariants.json"
+    "Vincular URLs reales de demostración interactiva cuando sean suministradas por el usuario",
+    "Monitorear indexación de Google para rich snippets SoftwareApplication"
   ],
   "decisions": [
     {
@@ -22,6 +28,12 @@
       "date": "2026-10-23T22:18:21.353Z",
       "title": "Adopción del Estándar Exo Advance v2.0",
       "impact": "Persistencia de estado entre sesiones y ahorro de tokens con AST Skeleton"
+    },
+    {
+      "id": "DEC-002",
+      "date": "2026-10-23T23:46:25.000Z",
+      "title": "Enfoque Product-Led Growth (PLG) con Demos en Vivo",
+      "impact": "Eliminación de tecnicismos áridos, llamado de atención en 5s y botones de Live Demo"
     }
   ],
   "session_notes": "Ecosistema inicializado con memoria viva persistente y QA Gate activo."
