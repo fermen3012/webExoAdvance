@@ -1,0 +1,21 @@
+{
+  "current_state": {
+    "last_updated": "2026-10-22T10:29:57.425Z",
+    "active_version": "1.0.0",
+    "project_name": "Website Exoadvance",
+    "domain": "Sitio Web Corporativo y Soluciones de Automatización con IA",
+    "recent_milestones": [
+      {
+        "id": "M01",
+        "description": "Inicialización del Ecosistema Multi-Agente y Memoria Persistente de Grafo",
+        "status": "COMPLETED",
+        "verification": "Estructura .agents/ y AGENTS.md verificados y activos"
+      }
+    ],
+    "in_progress": [],
+    "next_priorities": [
+      "Mapear módulos y dependencias iniciales en graph.json",
+      "Definir invariantes específicas del dominio del proyecto en invariants.json"
+    ]
+  }
+}

@@ -147,7 +147,7 @@ export function AdminAuthGuard({ children }: AdminAuthGuardProps) {
             className="flex items-center gap-1.5 text-xs text-slate-300 hover:text-red-400 transition-colors bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/40 px-3 py-1.5 rounded-lg cursor-pointer active:scale-95 font-mono"
           >
             <LogOut className="w-3.5 h-3.5 text-red-400" />
-            <span>Cerrar Sesión</span>
+            <span>Sign Out</span>
           </button>
         </div>
         {children}

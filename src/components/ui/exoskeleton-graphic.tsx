@@ -58,13 +58,13 @@ export function ExoskeletonGraphic() {
         </svg>
       </motion.div>
 
-      {/* Center Core Exoskeleton Emblem */}
+      {/* Center Core Emblem Box */}
       <motion.div 
-        className="relative z-10 w-[55%] h-[55%] bg-[#0A0F1A]/95 rounded-2xl border border-[#00E5FF]/40 shadow-[0_0_40px_rgba(0,229,255,0.3)] flex flex-col items-center justify-center p-6"
+        className="relative z-10 w-[58%] h-[58%] bg-[#0A0F1A]/95 rounded-2xl border border-[#00E5FF]/40 shadow-[0_0_40px_rgba(0,229,255,0.3)] flex flex-col items-center justify-center p-6"
         animate={{ scale: [1, 1.03, 1] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
       >
-        <div className="w-28 h-28 relative flex items-center justify-center">
+        <div className="w-24 h-24 sm:w-28 sm:h-28 relative flex items-center justify-center">
           <Image
             src="/exo-logo-transparent.png"
             alt="Exo Advance Official Emblem"
@@ -75,8 +75,12 @@ export function ExoskeletonGraphic() {
           />
         </div>
         <div className="mt-2 text-center">
-          <p className="text-[11px] font-mono tracking-[0.25em] text-[#00E5FF] font-semibold uppercase">EXOSKELETON</p>
-          <p className="text-[9px] font-mono tracking-widest text-[#64748B] uppercase">CORE ARCHITECTURE</p>
+          <p className="text-sm sm:text-base font-black font-sans tracking-tight text-white uppercase leading-none">
+            EXO <span className="text-[#00E5FF]">ADVANCE</span>
+          </p>
+          <p className="text-[9px] font-mono tracking-widest text-[#64748B] uppercase mt-1">
+            CORE ARCHITECTURE
+          </p>
         </div>
       </motion.div>
 

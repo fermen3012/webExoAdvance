@@ -1,0 +1,135 @@
+{
+  "project": {
+    "name": "Website Exoadvance",
+    "version": "1.0.0",
+    "domain": "Sitio Web Corporativo y Soluciones de Automatización con IA",
+    "stack": {
+      "framework": "Next.js 16.3.5 (App Router, Turbopack)",
+      "runtime": "React 19.2.8",
+      "styles": "Tailwind CSS v4",
+      "language": "TypeScript 5",
+      "database": "Supabase PostgreSQL (Leads, Interactions)",
+      "ai_engine": "OpenAI GPT-4o-mini + Contextual Fallback Rules",
+      "mailer": "Resend API",
+      "animations": "Framer Motion, React Spring"
+    }
+  },
+  "nodes": [
+    {
+      "id": "node_routing_shell",
+      "name": "Routing & Pages Shell",
+      "type": "module",
+      "files": [
+        "src/app/layout.tsx",
+        "src/app/page.tsx",
+        "src/app/contact/page.tsx",
+        "src/app/solutions/page.tsx",
+        "src/app/restaurant-technology/page.tsx",
+        "src/app/software-development/page.tsx",
+        "src/app/business-intelligence/page.tsx",
+        "src/app/admin/leads/page.tsx",
+        "src/app/robots.ts",
+        "src/app/sitemap.ts"
+      ],
+      "responsibilities": [
+        "Presentación corporativa y landing pages",
+        "SEO, sitemaps y robots dinámicos",
+        "Montaje del portal administrativo protegido /admin/leads"
+      ]
+    },
+    {
+      "id": "node_server_actions",
+      "name": "Server Actions & Seguridad",
+      "type": "service",
+      "files": [
+        "src/app/actions/auth.ts",
+        "src/app/actions/leads.ts",
+        "src/lib/security/rate-limiter.ts"
+      ],
+      "responsibilities": [
+        "Autenticación admin mediante cookie HttpOnly exo_admin_session",
+        "Captura, sanitización y honeypot de leads",
+        "Rate limiting en memoria por IP",
+        "Disparo asíncrono del agente de IA y envío de correos"
+      ]
+    },
+    {
+      "id": "node_ai_agent_and_mailer",
+      "name": "Motor de Inteligencia Artificial & Resend",
+      "type": "service",
+      "files": [
+        "src/lib/ai/agent.ts",
+        "src/lib/email/send-email.ts"
+      ],
+      "responsibilities": [
+        "Evaluación de scoring, sentimiento e intención de clientes con OpenAI gpt-4o-mini",
+        "Generador de respuestas contextuales de contingencia (fallback)",
+        "Despacho automatizado de plantillas de correo vía Resend API"
+      ]
+    },
+    {
+      "id": "node_data_persistence",
+      "name": "Capa Supabase & Esquema DB",
+      "type": "database",
+      "files": [
+        "src/lib/supabase/client.ts",
+        "src/lib/supabase/server.ts",
+        "src/lib/supabase/types.ts",
+        "supabase/schema.sql"
+      ],
+      "responsibilities": [
+        "Conexión browser y server mediante @supabase/ssr",
+        "Tablas relacionales public.leads y public.interactions con cascade",
+        "Tipado estricto Database para TypeScript"
+      ]
+    },
+    {
+      "id": "node_admin_and_ui_components",
+      "name": "Componentes UI & Dashboard CRM",
+      "type": "ui",
+      "files": [
+        "src/components/admin/admin-auth-guard.tsx",
+        "src/components/admin/crm-dashboard.tsx",
+        "src/components/admin/lead-detail-modal.tsx",
+        "src/components/sections/contact-form.tsx",
+        "src/components/layout/navbar.tsx",
+        "src/components/layout/footer.tsx",
+        "src/components/ui/antigravity-background.tsx",
+        "src/components/ui/exo-logo.tsx"
+      ],
+      "responsibilities": [
+        "Formulario interactivo de contacto con estados useActionState",
+        "Guardia de seguridad de portal de administración",
+        "Gestor integral de leads, métricas de conversión y notas internas CRM",
+        "Fidelidad visual corporativa de alta tecnología (cian #00E5FF, glassmorphism)"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "node_routing_shell",
+      "target": "node_admin_and_ui_components",
+      "relation": "renders"
+    },
+    {
+      "source": "node_admin_and_ui_components",
+      "target": "node_server_actions",
+      "relation": "triggers_server_actions"
+    },
+    {
+      "source": "node_server_actions",
+      "target": "node_data_persistence",
+      "relation": "persists_and_queries_records"
+    },
+    {
+      "source": "node_server_actions",
+      "target": "node_ai_agent_and_mailer",
+      "relation": "triggers_lead_enrichment_and_email"
+    },
+    {
+      "source": "node_ai_agent_and_mailer",
+      "target": "node_data_persistence",
+      "relation": "logs_ai_interactions"
+    }
+  ]
+}

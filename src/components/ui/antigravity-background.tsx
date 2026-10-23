@@ -36,7 +36,7 @@ export function AntigravityBackground() {
     window.addEventListener("resize", handleResize);
 
     // Particle setup: Antigravity weightless nodes floating upwards/drifting
-    const particleCount = Math.min(Math.floor((width * height) / 18000), 75);
+    const particleCount = Math.min(Math.floor((width * height) / 14000), 95);
     const particles: Particle[] = [];
 
     const colors = [
@@ -49,10 +49,10 @@ export function AntigravityBackground() {
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: -Math.random() * 0.5 - 0.1, // Floating upwards (antigravity effect)
-        radius: Math.random() * 1.8 + 0.8,
-        alpha: Math.random() * 0.6 + 0.2,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: -Math.random() * 0.55 - 0.15, // Floating upwards (antigravity effect)
+        radius: Math.random() * 2.0 + 1.0,
+        alpha: Math.random() * 0.65 + 0.35,
         color: colors[Math.floor(Math.random() * colors.length)],
         pulseSpeed: Math.random() * 0.02 + 0.005,
       });
@@ -126,12 +126,12 @@ export function AntigravityBackground() {
           const dist = Math.sqrt(dx * dx + dy * dy);
 
           if (dist < maxDistance) {
-            const lineAlpha = (1 - dist / maxDistance) * 0.2;
+            const lineAlpha = (1 - dist / maxDistance) * 0.3;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
             ctx.strokeStyle = `rgba(0, 229, 255, ${lineAlpha})`;
-            ctx.lineWidth = 0.6;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         }
@@ -153,7 +153,7 @@ export function AntigravityBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-0 opacity-60 transition-opacity duration-1000"
+      className="fixed inset-0 pointer-events-none z-0 opacity-80"
       aria-hidden="true"
     />
   );

@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { fetchCRMLeads, LeadWithInteractions } from "@/app/actions/leads";
 import { LeadDetailModal } from "./lead-detail-modal";
-import { Search, RefreshCw, Users, Sparkles, CheckCircle2, TrendingUp, Filter, MessageSquare, ArrowUpRight, ShieldCheck, LogOut, ChevronRight, Mail, Phone, Calendar } from "lucide-react";
+import { ServicesCatalogTab } from "./services-catalog-tab";
+import { Search, RefreshCw, Users, Sparkles, CheckCircle2, TrendingUp, Filter, MessageSquare, ArrowUpRight, ShieldCheck, LogOut, ChevronRight, Mail, Phone, Calendar, Briefcase } from "lucide-react";
 import { useAdminAuth } from "./admin-auth-guard";
 
 interface CRMDashboardProps {
@@ -14,6 +15,7 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
   const { onLogout: contextOnLogout } = useAdminAuth();
   const handleLogout = propOnLogout || contextOnLogout;
 
+  const [activeTab, setActiveTab] = useState<"leads" | "services">("leads");
   const [leads, setLeads] = useState<LeadWithInteractions[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,14 +84,16 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-            <button
-              onClick={loadLeads}
-              disabled={isLoading}
-              className="flex-1 sm:flex-none bg-[#1E3A8A] hover:bg-[#1E3A8A]/80 border border-[#00E5FF] text-white px-3.5 sm:px-4 py-2.5 rounded-xl font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.2)] active:scale-95"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00E5FF] ${isLoading ? "animate-spin" : ""}`} />
-              <span>Refresh Leads</span>
-            </button>
+            {activeTab === "leads" && (
+              <button
+                onClick={loadLeads}
+                disabled={isLoading}
+                className="flex-1 sm:flex-none bg-[#1E3A8A] hover:bg-[#1E3A8A]/80 border border-[#00E5FF] text-white px-3.5 sm:px-4 py-2.5 rounded-xl font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(0,229,255,0.2)] active:scale-95"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#00E5FF] ${isLoading ? "animate-spin" : ""}`} />
+                <span>Refresh Leads</span>
+              </button>
+            )}
 
             {handleLogout && (
               <button
@@ -98,14 +102,44 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
                 className="flex-1 sm:flex-none bg-red-950/40 hover:bg-red-900/60 border border-red-500/40 hover:border-red-500 text-red-300 px-3.5 sm:px-4 py-2.5 rounded-xl font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-[0_0_15px_rgba(239,68,68,0.15)] active:scale-95"
               >
                 <LogOut className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-400" />
-                <span>Cerrar Sesión</span>
+                <span>Sign Out</span>
               </button>
             )}
           </div>
         </div>
 
-        {/* Metrics Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        {/* CRM Main Navigation Tabs */}
+        <div className="flex items-center gap-2 border-b border-white/10 pb-1">
+          <button
+            onClick={() => setActiveTab("leads")}
+            className={`px-5 py-3 rounded-2xl font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 transition-all cursor-pointer border ${
+              activeTab === "leads"
+                ? "bg-[#1E3A8A] border-[#00E5FF] text-white shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                : "bg-[#0A0F1A]/80 border-white/10 text-slate-400 hover:text-white hover:border-white/20"
+            }`}
+          >
+            <Users className={`w-4 h-4 ${activeTab === "leads" ? "text-[#00E5FF]" : "text-slate-400"}`} />
+            <span>Lead Pipeline ({totalLeads})</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("services")}
+            className={`px-5 py-3 rounded-2xl font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 transition-all cursor-pointer border ${
+              activeTab === "services"
+                ? "bg-[#1E3A8A] border-[#00E5FF] text-white shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                : "bg-[#0A0F1A]/80 border-white/10 text-slate-400 hover:text-white hover:border-white/20"
+            }`}
+          >
+            <Briefcase className={`w-4 h-4 ${activeTab === "services" ? "text-[#00E5FF]" : "text-slate-400"}`} />
+            <span>Services & Product Catalog</span>
+          </button>
+        </div>
+
+        {/* Tab 1: Leads View */}
+        {activeTab === "leads" && (
+          <>
+            {/* Metrics Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div className="glass-card p-4 sm:p-6 rounded-2xl sm:rounded-[24px] border border-white/10 flex items-center justify-between bg-[#0A0F1A]/80">
             <div>
               <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-widest text-[#64748B]">Total Leads</span>
@@ -406,6 +440,13 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
             </>
           )}
         </div>
+        </>
+        )}
+
+        {/* Tab 2: Services & Products Catalog */}
+        {activeTab === "services" && (
+          <ServicesCatalogTab />
+        )}
 
       </div>
 

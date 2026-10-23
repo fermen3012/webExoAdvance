@@ -1,0 +1,88 @@
+{
+  "project": {
+    "name": "website-exoadvance",
+    "version": "1.0.0",
+    "domain": "Plataforma website exoadvance",
+    "stack": {
+      "core": "Next.js, Tailwind CSS, Supabase, TypeScript",
+      "framework": "Next.js / React / Node / Express",
+      "ui": "Tailwind CSS / Component System",
+      "database": "PostgreSQL / Supabase / Prisma / MySQL",
+      "auth": "Session / JWT / Supabase Auth / NextAuth"
+    }
+  },
+  "nodes": [
+    {
+      "id": "mod_root",
+      "name": "Módulo root",
+      "type": "module",
+      "directory": "root",
+      "sample_files": [
+        "eslint.config.mjs",
+        "next-env.d.ts",
+        "next.config.ts",
+        "postcss.config.mjs"
+      ]
+    },
+    {
+      "id": "mod_scratch",
+      "name": "Módulo scratch",
+      "type": "module",
+      "directory": "scratch",
+      "sample_files": [
+        "scratch/test_ai_agent.ts",
+        "scratch/test_ai_alexander.ts",
+        "scratch/test_columns.ts",
+        "scratch/test_fetch_leads.ts",
+        "scratch/test_insert.ts"
+      ]
+    },
+    {
+      "id": "mod_src_app",
+      "name": "Módulo src/app",
+      "type": "module",
+      "directory": "src/app",
+      "sample_files": [
+        "src/app/actions/auth.ts",
+        "src/app/actions/leads.ts",
+        "src/app/admin/leads/page.tsx",
+        "src/app/business-intelligence/page.tsx",
+        "src/app/contact/page.tsx"
+      ]
+    },
+    {
+      "id": "mod_src_components",
+      "name": "Módulo src/components",
+      "type": "module",
+      "directory": "src/components",
+      "sample_files": [
+        "src/components/admin/admin-auth-guard.tsx",
+        "src/components/admin/crm-dashboard.tsx",
+        "src/components/admin/lead-detail-modal.tsx",
+        "src/components/layout/footer.tsx",
+        "src/components/layout/navbar.tsx"
+      ]
+    },
+    {
+      "id": "mod_src_lib",
+      "name": "Módulo src/lib",
+      "type": "module",
+      "directory": "src/lib",
+      "sample_files": [
+        "src/lib/ai/agent.ts",
+        "src/lib/email/send-email.ts",
+        "src/lib/security/rate-limiter.ts",
+        "src/lib/supabase/client.ts",
+        "src/lib/supabase/server.ts"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "mod_scratch",
+      "target": "mod_src_lib",
+      "relation": "imports_and_uses"
+    }
+  ],
+  "last_synced": "2026-10-23T01:46:53.948Z"
+}

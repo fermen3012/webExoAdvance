@@ -15,7 +15,7 @@ export function Footer() {
           <div className="md:col-span-1 flex flex-col gap-4">
             <ExoLogo size="md" />
             <p className="text-xs text-[#64748B] leading-relaxed mt-2">
-              Technology engineered as an exoskeleton to strengthen operations, elevate business intelligence, and accelerate growth.
+              Custom software and web development company. Our essence is to empower your business: all your operations in a single control panel.
             </p>
             <div className="flex items-center gap-2 text-xs font-mono text-[#00E5FF] mt-2">
               <ShieldCheck className="w-4 h-4 text-[#00E5FF]" />
@@ -26,17 +26,22 @@ export function Footer() {
           {/* Solutions & Core Capabilities */}
           <div>
             <h3 className="text-xs font-mono font-bold tracking-widest text-white uppercase mb-4 flex items-center gap-2">
-              <Cpu className="w-3.5 h-3.5 text-[#00E5FF]" /> Capabilities
+              <Cpu className="w-3.5 h-3.5 text-[#00E5FF]" /> Services & Solutions
             </h3>
             <ul className="space-y-2.5 text-xs">
               <li>
+                <Link href="/services" className="hover:text-[#00E5FF] transition-colors text-white font-medium">
+                  Services & Production Apps
+                </Link>
+              </li>
+              <li>
                 <Link href="/software-development" className="hover:text-[#00E5FF] transition-colors">
-                  Software Development
+                  Custom Software Development
                 </Link>
               </li>
               <li>
                 <Link href="/business-intelligence" className="hover:text-[#00E5FF] transition-colors">
-                  Business Intelligence & Analytics
+                  Business Intelligence & Dashboards
                 </Link>
               </li>
               <li>
@@ -46,7 +51,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/solutions" className="hover:text-[#00E5FF] transition-colors">
-                  Custom Platform Architecture
+                  Enterprise Platforms
                 </Link>
               </li>
             </ul>

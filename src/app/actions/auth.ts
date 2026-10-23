@@ -2,11 +2,24 @@
 
 import { cookies, headers } from "next/headers";
 import { checkRateLimit } from "@/lib/security/rate-limiter";
+import crypto from "crypto";
 
 const SESSION_COOKIE_NAME = "exo_admin_session";
-const DEFAULT_PASSCODE = "exo2026";
-// Hash/token for session verification
-const SESSION_SECRET_TOKEN = "exo_sec_auth_token_v1_99a8b7c6";
+
+function getAdminAuthSecret(): string {
+  const secret = process.env.ADMIN_SESSION_SECRET || process.env.ADMIN_PIN;
+  if (!secret) {
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("ADMIN_SESSION_SECRET or ADMIN_PIN must be configured in production.");
+    }
+    return "dev_secret_fallback_key_384729104857";
+  }
+  return secret;
+}
+
+function computeSessionToken(secret: string): string {
+  return crypto.createHmac("sha256", secret).update("exo_admin_authenticated_session_v2").digest("hex");
+}
 
 export interface AuthState {
   success: boolean;
@@ -16,15 +29,21 @@ export interface AuthState {
 
 async function getClientIP(): Promise<string> {
   const headerList = await headers();
+  const cfConnectingIP = headerList.get("cf-connecting-ip");
+  if (cfConnectingIP) return cfConnectingIP.trim();
+
+  const xRealIP = headerList.get("x-real-ip");
+  if (xRealIP) return xRealIP.trim();
+
   const xForwardedFor = headerList.get("x-forwarded-for");
   if (xForwardedFor) {
     return xForwardedFor.split(",")[0].trim();
   }
-  return headerList.get("x-real-ip") || "127.0.0.1";
+  return "127.0.0.1";
 }
 
 /**
- * Server Action: Validate Admin Passcode with Brute-Force Rate Limiting & Set HttpOnly Cookie
+ * Server Action: Validate Admin Passcode with Brute-Force Rate Limiting & Set HttpOnly Signed Cookie
  */
 export async function adminLoginAction(prevState: AuthState | null, formData: FormData): Promise<AuthState> {
   try {
@@ -39,18 +58,36 @@ export async function adminLoginAction(prevState: AuthState | null, formData: Fo
     }
 
     const passcode = (formData.get("passcode") as string || "").trim();
-    const targetPin = process.env.ADMIN_PIN || process.env.NEXT_PUBLIC_ADMIN_PIN || DEFAULT_PASSCODE;
+    const targetPin = process.env.ADMIN_PIN || (process.env.NODE_ENV !== "production" ? "exo2026" : "");
 
-    if (passcode !== targetPin) {
+    if (!targetPin) {
+      return {
+        success: false,
+        error: "Admin authentication is not configured on this server.",
+      };
+    }
+
+    // Timing-safe comparison to prevent timing attacks
+    const passcodeBuf = Buffer.from(passcode);
+    const targetPinBuf = Buffer.from(targetPin);
+
+    const isMatch =
+      passcodeBuf.length === targetPinBuf.length &&
+      crypto.timingSafeEqual(passcodeBuf, targetPinBuf);
+
+    if (!isMatch) {
       return {
         success: false,
         error: `Invalid Security Passcode. Remaining attempts: ${rateCheck.remaining}`,
       };
     }
 
-    // Set Secure HttpOnly Cookie
+    // Set Secure HttpOnly Signed Cookie
+    const authSecret = getAdminAuthSecret();
+    const sessionToken = computeSessionToken(authSecret);
+
     const cookieStore = await cookies();
-    cookieStore.set(SESSION_COOKIE_NAME, SESSION_SECRET_TOKEN, {
+    cookieStore.set(SESSION_COOKIE_NAME, sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
@@ -84,13 +121,25 @@ export async function adminLogoutAction(): Promise<{ success: boolean }> {
 }
 
 /**
- * Server Function: Verify Admin Session Cookie
+ * Server Function: Verify Admin Session Cookie with Cryptographic HMAC
  */
 export async function isServerAdminAuthenticated(): Promise<boolean> {
   try {
     const cookieStore = await cookies();
     const sessionCookie = cookieStore.get(SESSION_COOKIE_NAME);
-    return sessionCookie?.value === SESSION_SECRET_TOKEN;
+    if (!sessionCookie?.value) return false;
+
+    const authSecret = getAdminAuthSecret();
+    const expectedToken = computeSessionToken(authSecret);
+
+    const sessionValBuf = Buffer.from(sessionCookie.value);
+    const expectedBuf = Buffer.from(expectedToken);
+
+    if (sessionValBuf.length !== expectedBuf.length) {
+      return false;
+    }
+
+    return crypto.timingSafeEqual(sessionValBuf, expectedBuf);
   } catch {
     return false;
   }

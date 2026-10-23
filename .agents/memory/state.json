@@ -1,0 +1,19 @@
+{
+  "project": "website-exoadvance",
+  "domain": "Plataforma website exoadvance",
+  "updated_at": "2026-10-23T01:46:53.253Z",
+  "active_version": "1.0.0",
+  "milestones": [
+    {
+      "id": "M01",
+      "description": "Inicialización del Ecosistema Multi-Agente y Memoria Persistente de Grafo",
+      "status": "COMPLETED",
+      "verification": "Estructura .agents/ y AGENTS.md verificados y activos"
+    }
+  ],
+  "in_progress": [],
+  "priorities": [
+    "Mapear módulos y dependencias iniciales en graph.json",
+    "Definir invariantes específicas del dominio del proyecto en invariants.json"
+  ]
+}

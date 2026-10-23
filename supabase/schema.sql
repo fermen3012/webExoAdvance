@@ -47,15 +47,25 @@ ALTER TABLE public.leads ADD COLUMN IF NOT EXISTS notes TEXT;
 -- Enable Row Level Security
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 
--- Safely drop existing policies to avoid conflicts
+-- Safely drop permissive and legacy policies
 DROP POLICY IF EXISTS "Allow public insert into leads" ON public.leads;
 DROP POLICY IF EXISTS "Allow authenticated full access to leads" ON public.leads;
 DROP POLICY IF EXISTS "Allow full access to leads" ON public.leads;
+DROP POLICY IF EXISTS "Allow public insert only on leads" ON public.leads;
+DROP POLICY IF EXISTS "Allow service_role full access to leads" ON public.leads;
 
-CREATE POLICY "Allow full access to leads" 
+-- [HARDENING SEC-01] Public/Anon can ONLY insert new inquiries (no read, no update, no delete)
+CREATE POLICY "Allow public insert only on leads" 
+  ON public.leads 
+  FOR INSERT 
+  TO anon, authenticated
+  WITH CHECK (true);
+
+-- [HARDENING SEC-01] Full access restricted to service_role (server backend)
+CREATE POLICY "Allow service_role full access to leads" 
   ON public.leads 
   FOR ALL 
-  TO anon, authenticated
+  TO service_role
   USING (true)
   WITH CHECK (true);
 
@@ -97,14 +107,24 @@ END $$;
 -- Enable Row Level Security
 ALTER TABLE public.interactions ENABLE ROW LEVEL SECURITY;
 
--- Safely drop existing policies to avoid conflicts
+-- Safely drop permissive and legacy policies
 DROP POLICY IF EXISTS "Allow public insert into interactions" ON public.interactions;
 DROP POLICY IF EXISTS "Allow authenticated full access to interactions" ON public.interactions;
 DROP POLICY IF EXISTS "Allow full access to interactions" ON public.interactions;
+DROP POLICY IF EXISTS "Allow public insert only on interactions" ON public.interactions;
+DROP POLICY IF EXISTS "Allow service_role full access to interactions" ON public.interactions;
 
-CREATE POLICY "Allow full access to interactions" 
+-- [HARDENING SEC-01] Public/Anon can ONLY insert initial interaction records linked to their inquiry
+CREATE POLICY "Allow public insert only on interactions" 
+  ON public.interactions 
+  FOR INSERT 
+  TO anon, authenticated
+  WITH CHECK (true);
+
+-- [HARDENING SEC-01] Full access restricted to service_role (server backend)
+CREATE POLICY "Allow service_role full access to interactions" 
   ON public.interactions 
   FOR ALL 
-  TO anon, authenticated
+  TO service_role
   USING (true)
   WITH CHECK (true);

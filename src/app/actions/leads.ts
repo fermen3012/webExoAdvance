@@ -22,11 +22,17 @@ export interface LeadSubmissionState {
 
 async function getClientIP(): Promise<string> {
   const headerList = await headers();
+  const cfConnectingIP = headerList.get("cf-connecting-ip");
+  if (cfConnectingIP) return cfConnectingIP.trim();
+
+  const xRealIP = headerList.get("x-real-ip");
+  if (xRealIP) return xRealIP.trim();
+
   const xForwardedFor = headerList.get("x-forwarded-for");
   if (xForwardedFor) {
     return xForwardedFor.split(",")[0].trim();
   }
-  return headerList.get("x-real-ip") || "127.0.0.1";
+  return "127.0.0.1";
 }
 
 export async function submitLead(prevState: LeadSubmissionState | null, formData: FormData): Promise<LeadSubmissionState> {

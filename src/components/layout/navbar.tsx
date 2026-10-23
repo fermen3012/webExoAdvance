@@ -7,6 +7,7 @@ import { ExoLogo } from "@/components/ui/exo-logo";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 
 const navItems = [
+  { label: "Services", href: "/services" },
   { label: "Solutions", href: "/solutions" },
   { label: "Exo Server", href: "/restaurant-technology" },
   { label: "Business Intelligence", href: "/business-intelligence" },
@@ -16,12 +17,17 @@ const navItems = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        setScrollProgress((window.scrollY / totalHeight) * 100);
+      }
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -35,6 +41,11 @@ export function Navbar() {
           : "bg-transparent py-5"
       }`}
     >
+      {/* Scroll Progress Bar (Framer Style) */}
+      <div
+        className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-[#1E3A8A] via-[#00E5FF] to-[#00E5FF] shadow-[0_0_10px_#00E5FF] transition-all duration-150"
+        style={{ width: `${scrollProgress}%` }}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           {/* Brand Logo */}

@@ -9,7 +9,7 @@ export const metadata = {
 
 export default function BusinessIntelligencePage() {
   return (
-    <div className="min-h-screen bg-[#0A0F1A] text-white pt-32 pb-24 selection:bg-[#00E5FF] selection:text-black">
+    <div className="min-h-screen text-white pt-32 pb-24 selection:bg-[#00E5FF] selection:text-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header Header */}
         <div className="text-center max-w-4xl mx-auto mb-20">

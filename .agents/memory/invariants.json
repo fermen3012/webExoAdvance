@@ -1,0 +1,20 @@
+{
+  "company": "Exo Advance",
+  "project": "website-exoadvance",
+  "domain": "Plataforma website exoadvance",
+  "invariants": {
+    "transparency_golden_rule": "OBLIGATORIO: Reportar en cada respuesta rol asignado, ejecutor y resumen de cambios ejecutados.",
+    "token_discipline": "OBLIGATORIO: Modificaciones quirúrgicas por bloques contiguos. Prohibido reescribir archivos enteros o leer >80 líneas si se puede acotar con StartLine-EndLine.",
+    "architecture_immunity": "OBLIGATORIO: Prohibido alterar enrutadores (App.tsx), flujos de autenticación o Contextos globales (AppContext, AuthContext) sin autorización expresa.",
+    "type_integrity": "OBLIGATORIO: Respetar estrictamente interfaces definidas (types.ts). Prohibido inventar propiedades no tipadas.",
+    "ui_freeze_fidelity": "OBLIGATORIO: Preservar al 100% diseño, estilos Tailwind, layout, bordes (ej: rounded-[32px]) y componentes preexistentes salvo solicitud explícita.",
+    "zero_assumptions": "OBLIGATORIO: Ante requerimientos ambiguos o riesgos de rotura, consultar al usuario antes de escribir código.",
+    "infosec_guard": "OBLIGATORIO: Cero exposición de secretos en cliente, sanitización estricta de inputs y aislamiento multi-tenant de datos.",
+    "qa_gate": "OBLIGATORIO: Todo cambio de código debe someterse a validación con node .agents/bin/verify.js antes de concluir la tarea.",
+    "orchestrator_transparency_golden_rule": "REGLA DE ORO INQUEBRANTABLE: El orquestador SIEMPRE debe mostrar de forma explícita al usuario quién hizo la tarea y a quién asignó la tarea solicitada (identificando claramente el especialista delegado o si fue ejecutada directamente por el Orquestador Senior), detallando el rol y las acciones realizadas en cada entrega.",
+    "token_discipline_and_graph_memory": "INQUEBRANTABLE: Respetar rigurosamente la memoria de grafo (graph.json). Prohibido reescribir código existente que ya funciona o regenerar archivos completos. Todo cambio debe ser estrictamente quirúrgico (usando diffs contiguos y reemplazos puntuales), ahorrando la mayor cantidad de tokens posible y manteniendo la estabilidad del código base.",
+    "ui_design_freeze": "INQUEBRANTABLE: Prohibido alterar o rediseñar la interfaz gráfica, estilos (Tailwind/CSS), paleta de colores, tipografías, márgenes, bordes o estructura de layout visual existente a menos que el usuario lo pida explícitamente. Preservar la coherencia visual en todos los módulos.",
+    "cybersecurity_and_data_protection": "INQUEBRANTABLE: Cero exposición de secretos o claves privadas en bundles del cliente. Sanitización obligatoria de entradas de usuario, prevención de inyecciones (SQLi, XSS) y validación estricta de pertenencia de recursos (prevención de IDOR).",
+    "qa_type_verification": "INQUEBRANTABLE: Todo cambio en código TypeScript/JavaScript debe someterse a verificación estricta de tipos o linters antes de dar la tarea por concluida, garantizando cero errores de compilación."
+  }
+}
