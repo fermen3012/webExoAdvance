@@ -1,7 +1,7 @@
 {
   "project": "website-exoadvance",
   "domain": "Plataforma website exoadvance",
-  "updated_at": "2026-10-23T17:45:27.123Z",
+  "updated_at": "2026-10-23T22:18:21.369Z",
   "active_version": "1.0.0",
   "milestones": [
     {
@@ -15,5 +15,14 @@
   "priorities": [
     "Mapear módulos y dependencias iniciales en graph.json",
     "Definir invariantes específicas del dominio del proyecto en invariants.json"
-  ]
+  ],
+  "decisions": [
+    {
+      "id": "DEC-001",
+      "date": "2026-10-23T22:18:21.353Z",
+      "title": "Adopción del Estándar Exo Advance v2.0",
+      "impact": "Persistencia de estado entre sesiones y ahorro de tokens con AST Skeleton"
+    }
+  ],
+  "session_notes": "Ecosistema inicializado con memoria viva persistente y QA Gate activo."
 }

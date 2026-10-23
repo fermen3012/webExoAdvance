@@ -23,6 +23,8 @@ function scanModules(rootDir) {
     const entries = fs.readdirSync(currentDir, { withFileTypes: true });
 
     for (const entry of entries) {
+      if (entry.isSymbolicLink && entry.isSymbolicLink()) continue;
+
       if (entry.isDirectory()) {
         if (!IGNORED_DIRS.has(entry.name) && !entry.name.startsWith('.')) {
           walk(path.join(currentDir, entry.name));
@@ -31,6 +33,12 @@ function scanModules(rootDir) {
         const ext = path.extname(entry.name).toLowerCase();
         if (CODE_EXTS.has(ext)) {
           const fullPath = path.join(currentDir, entry.name);
+          try {
+            const stat = fs.statSync(fullPath);
+            if (stat.size > 1024 * 1024) continue; // Ignorar archivos mayores a 1 MB
+          } catch (e) {
+            continue;
+          }
           const relPath = path.relative(rootDir, fullPath).replace(/\\/g, '/');
           
           const parts = relPath.split('/');
@@ -134,6 +142,18 @@ function main() {
     return;
   }
 
+  // Preservar nodos de arquitectura, dominio y servicios (Anti-Amnesia: nunca borrar conocimiento manual)
+  const existingNodes = Array.isArray(graphData.nodes) ? graphData.nodes : [];
+  const preservedCustomNodes = existingNodes.filter(n => n.type && n.type !== 'module');
+
+  // Identificar IDs de módulos de código para discriminar aristas de código vs aristas conceptuales/manuales
+  const codeModuleIds = new Set(Array.from(moduleMap.values()).map(m => m.id));
+
+  const existingEdges = Array.isArray(graphData.edges) ? graphData.edges : [];
+  const preservedCustomEdges = existingEdges.filter(e => {
+    return !codeModuleIds.has(e.source) || !codeModuleIds.has(e.target);
+  });
+
   const nodes = [];
   const edges = [];
   const seenEdges = new Set();
@@ -160,16 +180,27 @@ function main() {
     }
   }
 
-  // Preservar metadatos del proyecto y actualizar nodos y dependencias
-  graphData.nodes = nodes;
-  graphData.edges = edges;
+  // Integrar nodos de código actualizados con los nodos conceptuales preservados
+  const finalNodes = [...nodes, ...preservedCustomNodes];
+  const finalEdges = [...edges];
+
+  for (const ce of preservedCustomEdges) {
+    const edgeKey = `${ce.source}->${ce.target}`;
+    if (!seenEdges.has(edgeKey)) {
+      seenEdges.add(edgeKey);
+      finalEdges.push(ce);
+    }
+  }
+
+  graphData.nodes = finalNodes;
+  graphData.edges = finalEdges;
   graphData.last_synced = new Date().toISOString();
 
   fs.writeFileSync(GRAPH_FILE, JSON.stringify(graphData, null, 2), 'utf8');
 
-  console.log('✅ Grafo sincronizado con éxito:');
-  console.log(`   📦 Nodos reales detectados: ${nodes.length}`);
-  console.log(`   🔗 Aristas y relaciones de import mapeadas: ${edges.length}`);
+  console.log('✅ Grafo sincronizado con éxito (Memoria Viva Protegida):');
+  console.log(`   📦 Módulos de código: ${nodes.length} | Nodos de dominio preservados: ${preservedCustomNodes.length}`);
+  console.log(`   🔗 Relaciones de código: ${edges.length} | Relaciones manuales preservadas: ${preservedCustomEdges.length}`);
   console.log(`   📄 Archivo actualizado: ${path.relative(PROJECT_ROOT, GRAPH_FILE)}\n`);
 }
 

@@ -100,18 +100,18 @@ export default function ServicesPage() {
         </div>
 
         {/* Section: Apps & Systems in Production */}
-        <div className="space-y-8 mb-20">
+        <div id="demos" className="space-y-8 mb-20 scroll-mt-28">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-white/10 pb-6">
             <div>
               <span className="text-[10px] font-mono tracking-widest text-[#00E5FF] uppercase block font-bold">
-                ACTIVE PRODUCTION PORTFOLIO
+                ACTIVE PRODUCTION PORTFOLIO // LIVE SANDBOX
               </span>
               <h2 className="text-2xl sm:text-4xl font-black text-white font-sans mt-1">
                 Our Applications & Systems in Production
               </h2>
             </div>
             <p className="text-xs text-[#64748B] font-mono sm:max-w-xs">
-              Live production platforms engineered for high-demand business workflows.
+              Explore interactive live demos and test our production platforms directly.
             </p>
           </div>
 
@@ -172,18 +172,28 @@ export default function ServicesPage() {
                   </div>
                 </div>
 
-                <div className="pt-6 mt-6 border-t border-white/10 flex items-center justify-between">
+                <div className="pt-6 mt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-3">
                   <span className="text-[11px] font-mono text-slate-400">
                     {prod.pricingModel}
                   </span>
 
-                  <Link
-                    href={prod.routeHref}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#1E3A8A] hover:bg-[#1E3A8A]/90 text-white font-mono text-xs font-bold uppercase tracking-wider border border-[#00E5FF] transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)] group"
-                  >
-                    <span>Learn More</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#00E5FF] group-hover:translate-x-1 transition-transform" />
-                  </Link>
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={prod.demoHref || prod.routeHref}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#00E5FF]/20 to-[#1E3A8A]/50 hover:from-[#00E5FF]/30 hover:to-[#1E3A8A]/70 text-[#00E5FF] hover:text-white font-mono text-xs font-bold uppercase tracking-wider border border-[#00E5FF]/60 hover:border-[#00E5FF] transition-all shadow-[0_0_15px_rgba(0,229,255,0.25)] hover:scale-105 active:scale-95 group/demo cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-[#00E5FF] animate-pulse" />
+                      <span>Live Demo</span>
+                    </Link>
+
+                    <Link
+                      href={prod.routeHref}
+                      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white font-mono text-xs font-bold uppercase tracking-wider border border-white/10 hover:border-white/20 transition-all group"
+                    >
+                      <span>Details</span>
+                      <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-[#00E5FF] group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </div>
                 </div>
               </SpotlightCard>
             ))}

@@ -31,7 +31,10 @@ const SENSITIVE_FILE_PATTERNS = [
   /\.pem$/i,
   /\.key$/i,
   /\.cert$/i,
+  /\.p12$/i,
+  /\.pfx$/i,
   /id_rsa/i,
+  /id_ed25519/i,
   /secret/i,
   /credential/i,
   /service[-_]?account/i,
@@ -48,6 +51,9 @@ function isSensitiveFile(filename) {
   return SENSITIVE_FILE_PATTERNS.some(pattern => pattern.test(filename));
 }
 
+// Límite máximo de tamaño de archivo para escaneo AST (1 MB) para mitigar DoS
+const MAX_FILE_SIZE_BYTES = 1024 * 1024;
+
 // Sanitizador de secretos para evitar fugas en skeleton.compact
 function sanitizeSecretLine(line) {
   let sanitized = line;
@@ -55,8 +61,12 @@ function sanitizeSecretLine(line) {
   // 1. Patrones conocidos de API keys y tokens
   sanitized = sanitized.replace(/sk_live_[A-Za-z0-9_]{16,}/g, '[REDACTED_SECRET_KEY]');
   sanitized = sanitized.replace(/rk_live_[A-Za-z0-9_]{16,}/g, '[REDACTED_SECRET_KEY]');
-  sanitized = sanitized.replace(/ghp_[A-Za-z0-9_]{20,}/g, '[REDACTED_GITHUB_TOKEN]');
+  sanitized = sanitized.replace(/gh[pousr]_[A-Za-z0-9_]{20,}/g, '[REDACTED_GITHUB_TOKEN]');
   sanitized = sanitized.replace(/AIzaSy[A-Za-z0-9_\-]{25,}/g, '[REDACTED_GOOGLE_KEY]');
+  sanitized = sanitized.replace(/sk-proj-[A-Za-z0-9_\-]{20,}/g, '[REDACTED_OPENAI_KEY]');
+  sanitized = sanitized.replace(/sk-ant-[A-Za-z0-9_\-]{20,}/g, '[REDACTED_ANTHROPIC_KEY]');
+  sanitized = sanitized.replace(/AKIA[0-9A-Z]{16}/g, '[REDACTED_AWS_KEY]');
+  sanitized = sanitized.replace(/xox[baprs]-[0-9a-zA-Z]{10,}/g, '[REDACTED_SLACK_TOKEN]');
   sanitized = sanitized.replace(/Bearer\s+[A-Za-z0-9\-._~+/]+=*/gi, 'Bearer [REDACTED_TOKEN]');
   sanitized = sanitized.replace(/eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]+/g, '[REDACTED_JWT]');
 
@@ -75,6 +85,9 @@ function scanDirectory(dir, fileList = []) {
 
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
+    // Ignorar symlinks para mitigar bucles cíclicos (CWE-400)
+    if (entry.isSymbolicLink && entry.isSymbolicLink()) continue;
+
     if (entry.isDirectory()) {
       if (!IGNORED_DIRS.has(entry.name) && !entry.name.startsWith('.')) {
         scanDirectory(path.join(dir, entry.name), fileList);
@@ -85,7 +98,13 @@ function scanDirectory(dir, fileList = []) {
       }
       const ext = path.extname(entry.name).toLowerCase();
       if (SUPPORTED_EXTS.has(ext)) {
-        fileList.push(path.join(dir, entry.name));
+        const fullFilePath = path.join(dir, entry.name);
+        try {
+          const stat = fs.statSync(fullFilePath);
+          if (stat.size <= MAX_FILE_SIZE_BYTES) {
+            fileList.push(fullFilePath);
+          }
+        } catch (e) {}
       }
     }
   }

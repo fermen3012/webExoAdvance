@@ -65,27 +65,27 @@ export function InteractiveBentoSuite() {
             {activeTab === "software" && (
               <div className="space-y-4 animate-in fade-in duration-300">
                 <h3 className="text-3xl sm:text-4xl font-black text-white font-sans tracking-tight">
-                  Custom Software & Web Platforms
+                  Custom Software & Operating Hubs
                 </h3>
                 <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed max-w-2xl font-normal">
-                  Tailor-made software engineering on Next.js 16, TypeScript, and serverless architectures. We build proprietary business platforms, dedicated CRM portals, and administrative operating hubs designed to fit your exact operational workflows.
+                  Say goodbye to disconnected tools and chaotic spreadsheets. We build bespoke cloud software and client portals engineered to unite your sales, inventory, and staff under one fast, intuitive dashboard.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-mono text-slate-300">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>High-velocity cloud web applications</span>
+                    <span>All-in-one business management portal</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Workflow automation via webhooks & cloud jobs</span>
+                    <span>Automated billing, webhooks & invoicing</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>Bank-grade security with strict RLS policies</span>
+                    <span>Role-based access & bank-grade encryption</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>99.99% global edge network availability</span>
+                    <span>99.99% cloud uptime guarantee</span>
                   </div>
                 </div>
               </div>
@@ -97,12 +97,12 @@ export function InteractiveBentoSuite() {
                   Exo Server Restaurant OS
                 </h3>
                 <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed max-w-2xl font-normal">
-                  An all-in-one hospitality point-of-sale and kitchen operating system. Integrates touchscreen self-service ordering kiosks, contactless table QR menus, real-time Kitchen Display Systems (KDS), and waitstaff handhelds.
+                  Built for fast-paced dining. Supercharge your front-of-house with touchscreen ordering kiosks, digital QR table menus, and instant Kitchen Display Systems (KDS) that eliminate lost tickets and double table turnover.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-mono text-slate-300">
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[#00E5FF] shrink-0" />
-                    <span>Interactive self-service ordering kiosks</span>
+                    <span>Interactive self-service touch kiosks</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[#00E5FF] shrink-0" />
@@ -110,11 +110,11 @@ export function InteractiveBentoSuite() {
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[#00E5FF] shrink-0" />
-                    <span>Dynamic QR code digital ordering menus</span>
+                    <span>Dynamic contactless QR ordering menus</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[#00E5FF] shrink-0" />
-                    <span>Live shift inventory & table-turn metrics</span>
+                    <span>Live shift inventory & recipe cost tracking</span>
                   </div>
                 </div>
               </div>
@@ -123,10 +123,10 @@ export function InteractiveBentoSuite() {
             {activeTab === "bi" && (
               <div className="space-y-4 animate-in fade-in duration-300">
                 <h3 className="text-3xl sm:text-4xl font-black text-white font-sans tracking-tight">
-                  Business Intelligence & Data Pipelines
+                  Executive Intelligence & Live Dashboards
                 </h3>
                 <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed max-w-2xl font-normal">
-                  Transform millions of scattered operational records into decisive leadership intelligence. We engineer bespoke Power BI dashboards, automated ETL data warehousing pipelines, and predictive profit forecasting.
+                  Stop waiting for month-end reports. Get real-time financial, sales, and inventory analytics in Power BI and mobile telemetry, giving you instant clarity on daily margins directly from your phone.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-mono text-slate-300">
                   <div className="flex items-center gap-2">
@@ -135,15 +135,15 @@ export function InteractiveBentoSuite() {
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span>Live KPI threshold monitoring & alert triggers</span>
+                    <span>Live sales alerts & low-stock notifications</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span>PostgreSQL & Supabase data warehousing</span>
+                    <span>Centralized Data Warehouse storage</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-purple-400 shrink-0" />
-                    <span>Scheduled automated reporting without manual entry</span>
+                    <span>Automated morning executive email summaries</span>
                   </div>
                 </div>
               </div>
@@ -152,10 +152,10 @@ export function InteractiveBentoSuite() {
             {activeTab === "ai" && (
               <div className="space-y-4 animate-in fade-in duration-300">
                 <h3 className="text-3xl sm:text-4xl font-black text-white font-sans tracking-tight">
-                  Autonomous AI Agents & Lead Flow
+                  Autonomous AI Lead Flow & Enrichment
                 </h3>
                 <p className="text-sm sm:text-base text-[#94A3B8] leading-relaxed max-w-2xl font-normal">
-                  Intelligent orchestration that analyzes and qualifies prospect inquiries in under 5 seconds. Our engine scores incoming leads (1-100), evaluates commercial intent, and drafts tailored follow-up responses automatically.
+                  Never let a qualified buyer wait. Our autonomous AI engine analyzes incoming requests in under 5 seconds, scores commercial intent, and drafts personalized proposals around the clock.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs font-mono text-slate-300">
                   <div className="flex items-center gap-2">
@@ -164,42 +164,36 @@ export function InteractiveBentoSuite() {
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span>Instant personalized email follow-ups via Resend</span>
+                    <span>Instant personalized email follow-ups</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span>Commercial sentiment & urgency analysis</span>
+                    <span>Customer purchase intent & sentiment detection</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span>Contextual fallback without downtime</span>
+                    <span>Zero downtime with fallback resilience</span>
                   </div>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="pt-8 mt-8 border-t border-white/10 flex items-center justify-between">
+          <div className="pt-8 mt-8 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
             <div className="flex items-center gap-2 text-xs font-mono text-[#00E5FF]">
-              <Cpu className="w-4 h-4" />
-              <span>INDUSTRIAL HARDENED CODE</span>
+              <Sparkles className="w-4 h-4 animate-pulse" />
+              <span>LIVE DEMO SANDBOX READY</span>
             </div>
 
-            <Link
-              href={
-                activeTab === "restaurant"
-                  ? "/restaurant-technology"
-                  : activeTab === "bi"
-                  ? "/business-intelligence"
-                  : activeTab === "software"
-                  ? "/software-development"
-                  : "/solutions"
-              }
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1E3A8A] hover:bg-[#1E3A8A]/90 text-white font-mono text-xs font-bold uppercase tracking-wider border border-[#00E5FF] transition-all shadow-[0_0_15px_rgba(0,229,255,0.2)] group"
-            >
-              <span>EXPLORE DETAILS</span>
-              <ArrowRight className="w-3.5 h-3.5 text-[#00E5FF] group-hover:translate-x-1 transition-transform" />
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/services#demos"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#1E3A8A] hover:bg-[#1E3A8A]/90 text-white font-mono text-xs font-bold uppercase tracking-wider border border-[#00E5FF] transition-all shadow-[0_0_15px_rgba(0,229,255,0.25)] hover:scale-105 active:scale-95 group cursor-pointer"
+              >
+                <span>TEST LIVE DEMO</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#00E5FF] group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
           </div>
         </SpotlightCard>
 
@@ -210,27 +204,27 @@ export function InteractiveBentoSuite() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-mono text-[#00E5FF] uppercase font-bold tracking-wider">
-                  LIVE TELEMETRY
+                  REAL-TIME BUSINESS IMPACT
                 </span>
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
               </div>
 
               <div className="p-4 rounded-xl bg-[#070B14] border border-white/10 font-mono text-xs space-y-2">
                 <div className="flex justify-between text-slate-400">
-                  <span>Stack Runtime</span>
-                  <span className="text-white">Next.js 16 / React 19</span>
+                  <span>Queue Velocity</span>
+                  <span className="text-[#00E5FF] font-bold">-45% Wait Time</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
-                  <span>Edge Latency</span>
-                  <span className="text-[#00E5FF]">&lt; 28ms Global</span>
+                  <span>Average Ticket</span>
+                  <span className="text-emerald-400 font-bold">+$4.20 Lift</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
-                  <span>Security Layer</span>
-                  <span className="text-emerald-400">Bank-Grade RLS</span>
+                  <span>Reporting Effort</span>
+                  <span className="text-purple-300 font-bold">-80% Manual Work</span>
                 </div>
                 <div className="flex justify-between text-slate-400">
-                  <span>AI Ingestion</span>
-                  <span className="text-purple-300">Active</span>
+                  <span>AI First Touch</span>
+                  <span className="text-amber-300 font-bold">&lt; 5s Instant</span>
                 </div>
               </div>
             </div>

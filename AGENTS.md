@@ -32,13 +32,29 @@ El Orquestador opera con despacho automático según `.agents/skills/registry.js
 ## ⚡ 3. Protocolo de Ahorro y Disciplina de Tokens (L0 / L1 / L2)
 1. **L0 (Contexto Base Activo & Esqueleto AST):**
    - Consultar `.agents/memory/invariants.json` y `graph.json` antes de intervenciones estructurales.
-   - **Esqueleto de Firmas:** Consultar `.agents/memory/skeleton.compact` para ubicar líneas y funciones exactas sin leer archivos enteros a ciegas.
+   - **Esqueleto de Firmas:** Consultar `.agents/memory/skeleton.compact` para ubicar líneas y funciones exactas sin leer archivos enteros a ciegas (ahorro del 85-95% de tokens).
    - Actualizar esqueleto y dependencias con: `node .agents/bin/scan.js` y `node .agents/bin/sync-graph.js`.
 2. **L1 (Especialistas Bajo Demanda):** Cargar directivas de `.agents/skills/` únicamente cuando la tarea pertenezca a su dominio.
 3. **L2 (Lectura y Edición Quirúrgica):**
    - **Lectura acotada:** En archivos de más de 80 líneas, usar `read_file` especificando `StartLine` y `EndLine`. Prohibido volcar archivos enteros.
    - **Edición precisa:** Usar `edit_file` para bloques contiguos exactos. Prohibido reescribir archivos enteros que ya funcionan.
    - **No duplicación:** Tras modificar archivos con herramientas, no re-imprimir el archivo completo en la respuesta de chat.
+
+---
+
+## 🧠 3.1 Protocolo Anti-Amnesia & Memoria Continua
+Para evitar la pérdida de contexto entre sesiones o compactaciones de chat:
+1. **Inicio de Sesión (Recuperación Inmediata de Contexto):**
+   - El agente DEBE consultar `.agents/memory/state.json` (<30 líneas, ~150 tokens) antes de comenzar cualquier tarea compleja.
+   - Esto reactiva de inmediato el historial de hitos completados, el trabajo en curso y las decisiones de arquitectura adoptadas, eliminando la necesidad de re-explicar el proyecto.
+2. **Cierre de Tarea (Persistencia Obligatoria de Estado):**
+   - Al finalizar cada intervención o hito, el agente DEBE actualizar `.agents/memory/state.json`:
+     - Marcar el hito finalizado en `milestones`.
+     - Documentar cualquier cambio o decisión clave en `decisions`.
+     - Actualizar la lista de `priorities` para la siguiente sesión.
+3. **Preservación Inmune a Actualizaciones:**
+   - Tanto `setup.js` como `upgrade.js` ejecutan fusión inteligente (`smartMergeMemory`), garantizando que jamás se sobreescriban los hitos, decisiones, invariantes ni nodos del grafo de conocimiento preexistentes.
+   - Se crea automáticamente un respaldo preventivo fechado en `.agents.backup_YYYYMMDD_HHMMSS`.
 
 ---
 

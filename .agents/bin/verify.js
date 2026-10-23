@@ -56,11 +56,15 @@ function checkSecrets() {
   // Patrones peligrosos de claves en archivos de código
   const dangerousPatterns = [
     /sk_live_[A-Za-z0-9_]{16,}/,
-    /ghp_[A-Za-z0-9_]{20,}/,
+    /gh[pousr]_[A-Za-z0-9_]{20,}/,
     /AIzaSy[A-Za-z0-9_\-]{25,}/,
     /sbp_[A-Za-z0-9_]{20,}/,
     /vck_[A-Za-z0-9_]{20,}/,
-    /-----BEGIN (?:RSA )?PRIVATE KEY-----/
+    /sk-(?:proj-)?[A-Za-z0-9_\-]{20,}/,
+    /sk-ant-[A-Za-z0-9_\-]{20,}/,
+    /AKIA[0-9A-Z]{16}/,
+    /xox[baprs]-[0-9a-zA-Z]{10,}/,
+    /-----BEGIN (?:[A-Z ]+)?PRIVATE KEY-----/
   ];
 
   // Auditoría específica de .mcp.json para garantizar cero claves hardcodeadas
@@ -82,6 +86,8 @@ function checkSecrets() {
     if (!fs.existsSync(dir)) return;
     const entries = fs.readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {
+      if (entry.isSymbolicLink && entry.isSymbolicLink()) continue;
+
       if (entry.isDirectory()) {
         if (!ignoredDirs.has(entry.name) && !entry.name.startsWith('.')) {
           scanForSecrets(path.join(dir, entry.name));
@@ -89,7 +95,13 @@ function checkSecrets() {
       } else if (entry.isFile()) {
         const ext = path.extname(entry.name).toLowerCase();
         if (['.ts', '.tsx', '.js', '.jsx', '.json', '.py', '.php'].includes(ext)) {
-          codeFiles.push(path.join(dir, entry.name));
+          const filePath = path.join(dir, entry.name);
+          try {
+            const stat = fs.statSync(filePath);
+            if (stat.size <= 1024 * 1024) {
+              codeFiles.push(filePath);
+            }
+          } catch (e) {}
         }
       }
     }

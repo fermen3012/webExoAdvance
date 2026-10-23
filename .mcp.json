@@ -1,34 +1,26 @@
 {
   "mcpServers": {
     "supabase": {
-      "command": "cmd.exe",
+      "command": "npx",
       "args": [
-        "/c",
-        "npx",
         "-y",
-        "@supabase/mcp-server-supabase@latest",
-        "--project-ref",
-        "enbrjdaypbeessebizfu"
+        "@supabase/mcp-server-supabase@latest"
       ],
       "env": {
         "SUPABASE_ACCESS_TOKEN": "${SUPABASE_ACCESS_TOKEN}"
       }
     },
     "postgres": {
-      "command": "cmd.exe",
+      "command": "npx",
       "args": [
-        "/c",
-        "npx",
         "-y",
         "@modelcontextprotocol/server-postgres",
         "${DATABASE_URL}"
       ]
     },
     "github": {
-      "command": "cmd.exe",
+      "command": "npx",
       "args": [
-        "/c",
-        "npx",
         "-y",
         "@modelcontextprotocol/server-github"
       ],
@@ -37,10 +29,8 @@
       }
     },
     "vercel": {
-      "command": "cmd.exe",
+      "command": "npx",
       "args": [
-        "/c",
-        "npx",
         "-y",
         "@modelcontextprotocol/server-vercel"
       ],

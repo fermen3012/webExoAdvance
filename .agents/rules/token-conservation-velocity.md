@@ -34,3 +34,8 @@ To maximize development velocity, eliminate context saturation, and reduce token
 
 ## 6. Scoped Subagent Delegation
 - For exploratory codebase analysis or extensive refactor planning, invoke a subagent with a restricted prompt rather than pulling entire directories into the parent context.
+
+## 7. Anti-Amnesia State Ledger (Session Continuity)
+- Never start complex tasks without inspecting `.agents/memory/state.json` (~150 tokens) to retrieve historical milestones and recent architectural decisions.
+- Never conclude tasks without recording milestone completion and new technical decisions in `.agents/memory/state.json`.
+- This guarantees zero cognitive amnesia across sessions while saving tens of thousands of redundant analysis tokens.

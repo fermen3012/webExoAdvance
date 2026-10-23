@@ -41,7 +41,7 @@ export default function HomePage() {
             <div className="lg:col-span-7 flex flex-col items-start text-left">
               <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#1E3A8A]/40 border border-[#00E5FF]/30 text-[#00E5FF] text-xs font-mono font-semibold tracking-wider mb-6 shadow-[0_0_20px_rgba(0,229,255,0.2)]">
                 <span className="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse" />
-                EXO ADVANCE LLC // CUSTOM SOFTWARE & WEB ARCHITECTURE
+                EXO ADVANCE // CUSTOM SAAS & CLOUD PLATFORMS
               </div>
 
               <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-[1.05] font-sans">
@@ -52,16 +52,17 @@ export default function HomePage() {
               </h1>
 
               <p className="mt-6 text-lg sm:text-xl text-[#94A3B8] leading-relaxed max-w-2xl font-normal">
-                <strong className="text-white font-bold">Exo Advance</strong> is a custom software and modern web development company. Our essence is to empower your business: simplify your operations with Exo Advance, improve productivity, and gain a decisive competitive advantage.
+                <strong className="text-white font-bold">Exo Advance</strong> is a custom software and modern web development company. Our essence is to empower your business: run your sales, inventory, and operations from a single control panel. Improve productivity, eliminate manual bottlenecks, and gain a decisive competitive advantage.
               </p>
 
               {/* Shimmer CTAs */}
               <div className="mt-8 flex flex-wrap items-center gap-4">
                 <Link
-                  href="/services"
+                  href="/services#demos"
                   className="px-7 py-4 rounded-xl bg-[#1E3A8A] hover:bg-[#1E3A8A]/90 text-white font-mono text-xs tracking-wider font-bold uppercase border border-[#00E5FF] transition-all shadow-[0_0_25px_rgba(0,229,255,0.25)] hover:shadow-[0_0_35px_rgba(0,229,255,0.45)] hover:scale-[1.02] active:scale-95 flex items-center gap-2 group cursor-pointer"
                 >
-                  <span>EXPLORE SERVICES & APPS</span>
+                  <Sparkles className="w-4 h-4 text-[#00E5FF] animate-pulse" />
+                  <span>EXPLORE LIVE DEMOS</span>
                   <ArrowRight className="w-4 h-4 text-[#00E5FF] group-hover:translate-x-1.5 transition-transform" />
                 </Link>
 
@@ -69,7 +70,7 @@ export default function HomePage() {
                   href="/contact"
                   className="px-7 py-4 rounded-xl bg-[#0F172A]/80 hover:bg-[#0F172A] text-slate-200 hover:text-white font-mono text-xs tracking-wider font-semibold uppercase border border-white/10 hover:border-white/30 transition-all flex items-center gap-2 hover:scale-[1.02] active:scale-95 cursor-pointer"
                 >
-                  <span>TALK TO AN ARCHITECT</span>
+                  <span>TALK TO AN EXPERT</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </Link>
               </div>
@@ -77,16 +78,16 @@ export default function HomePage() {
               {/* Core Feature Tags with Spotlight Touch */}
               <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-3 gap-6 w-full max-w-lg">
                 <div>
-                  <p className="text-xs font-mono text-[#00E5FF] font-semibold">CUSTOM SOFTWARE</p>
-                  <p className="text-xs text-[#64748B] mt-0.5">Built your way</p>
+                  <p className="text-xs font-mono text-[#00E5FF] font-semibold">ONE CONTROL PANEL</p>
+                  <p className="text-xs text-[#64748B] mt-0.5">Zero chaos</p>
                 </div>
                 <div>
-                  <p className="text-xs font-mono text-[#00E5FF] font-semibold">UNIFIED HUB</p>
-                  <p className="text-xs text-[#64748B] mt-0.5">Total command</p>
+                  <p className="text-xs font-mono text-[#00E5FF] font-semibold">LIVE DEMOS</p>
+                  <p className="text-xs text-[#64748B] mt-0.5">Test instantly</p>
                 </div>
                 <div>
-                  <p className="text-xs font-mono text-[#00E5FF] font-semibold">EXO ADVANCE</p>
-                  <p className="text-xs text-[#64748B] mt-0.5">Empowering scale</p>
+                  <p className="text-xs font-mono text-[#00E5FF] font-semibold">AUTOMATION</p>
+                  <p className="text-xs text-[#64748B] mt-0.5">Built to scale</p>
                 </div>
               </div>
             </div>
@@ -114,7 +115,7 @@ export default function HomePage() {
                 <AnimatedCounter to={45} prefix="-" suffix="%" />
               </div>
               <p className="text-[11px] font-mono text-slate-400 mt-2">
-                Reduced line queues and kiosk speed
+                Faster checkout with touch kiosks & QR menus
               </p>
             </SpotlightCard>
 
@@ -126,19 +127,19 @@ export default function HomePage() {
                 <AnimatedCounter to={4.2} prefix="+$" decimals={2} />
               </div>
               <p className="text-[11px] font-mono text-slate-400 mt-2">
-                Automated algorithmic recommendations
+                Automated recommendations per order
               </p>
             </SpotlightCard>
 
             <SpotlightCard className="p-6 text-center">
               <span className="text-[10px] font-mono uppercase tracking-widest text-[#64748B] block mb-1">
-                SLA Availability
+                System Reliability
               </span>
               <div className="text-3xl sm:text-5xl font-black text-purple-400 font-sans tracking-tight">
                 <AnimatedCounter to={99.99} suffix="%" decimals={2} />
               </div>
               <p className="text-[11px] font-mono text-slate-400 mt-2">
-                Global Edge serverless infrastructure
+                Zero crashes during peak sales rush
               </p>
             </SpotlightCard>
 
@@ -150,7 +151,7 @@ export default function HomePage() {
                 <AnimatedCounter to={5} prefix="<" suffix="s" />
               </div>
               <p className="text-[11px] font-mono text-slate-400 mt-2">
-                Autonomous AI qualification engine
+                Instant 24/7 AI qualification & quotes
               </p>
             </SpotlightCard>
           </div>
@@ -163,13 +164,13 @@ export default function HomePage() {
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#1E3A8A]/50 border border-[#00E5FF]/40 text-[#00E5FF] font-mono text-xs font-bold uppercase tracking-wider mb-4">
               <Layers className="w-3.5 h-3.5" />
-              <span>INTERACTIVE PLATFORM EXPLORER</span>
+              <span>PRODUCT-LED SUITE // LIVE APPS</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-sans">
-              The Technology Suite of <span className="text-[#00E5FF]">Exo Advance</span>
+              SaaS Platforms Engineered to <span className="text-[#00E5FF]">Grow Your Bottom Line</span>
             </h2>
             <p className="text-base text-[#94A3B8] mt-4 leading-relaxed font-normal">
-              Explore in real-time the four key divisions engineered to empower, automate, and protect your enterprise workflows.
+              Pick your platform, explore interactive features, and see how our systems put you miles ahead of the competition.
             </p>
           </div>
 
@@ -186,14 +187,14 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-xs font-mono font-bold text-[#00E5FF] tracking-[0.3em] uppercase mb-3">
-              ENGINEERING PHILOSOPHY
+              THE POWER OF SIMPLICITY
             </h2>
             <h3 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-sans uppercase">
               ALL YOUR OPERATIONS IN A SINGLE CONTROL PANEL
             </h3>
             <div className="w-16 h-1 bg-[#00E5FF] mx-auto my-6 shadow-[0_0_10px_#00E5FF]" />
             <p className="text-base sm:text-lg text-[#94A3B8] leading-relaxed">
-              Simplify your operations with Exo Advance. Automate repetitive tasks so you can focus entirely on expanding your business.
+              Simplify your operations with Exo Advance. Stop juggling 10 different tools. Automate routine tasks so you can focus 100% on expanding your business.
             </p>
           </div>
 
@@ -213,7 +214,7 @@ export default function HomePage() {
                 YOUR WAY
               </span>
               <p className="text-sm text-[#94A3B8] leading-relaxed">
-                Custom software engineering and high-performance websites built with the exact flexibility your business needs to compete and lead.
+                Ditch messy spreadsheets. Get a high-speed web application tailored 100% to your team&apos;s workflow, clients, and growth goals.
               </p>
             </SpotlightCard>
 
@@ -231,7 +232,7 @@ export default function HomePage() {
                 SIMPLIFY
               </span>
               <p className="text-sm text-[#94A3B8] leading-relaxed">
-                All your operations unified in real time. Dynamic dashboards and deep analytics to make informed decisions and secure competitive superiority.
+                Live revenue, margin, and stock dashboards on your phone or desktop. Eliminate blind spots and make decisions based on real-time facts.
               </p>
             </SpotlightCard>
 
@@ -249,7 +250,7 @@ export default function HomePage() {
                 PRODUCTIVITY
               </span>
               <p className="text-sm text-[#94A3B8] leading-relaxed">
-                Our essence is to empower your business with agile tools, intelligent automation, and production-ready applications engineered for resilience.
+                Cut dining wait times, eliminate kitchen order mistakes, and let routine tasks run on autopilot so your business expands faster.
               </p>
             </SpotlightCard>
           </div>
@@ -266,12 +267,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-4xl sm:text-6xl font-black text-white tracking-tight font-sans uppercase leading-tight">
-              YOUR BUSINESS.<br />
-              <span className="text-[#00E5FF]">OUR TECHNOLOGY.</span><br />
-              ONE STEP AHEAD.
+              READY TO RUN YOUR BUSINESS<br />
+              <span className="text-[#00E5FF]">ON AUTOPILOT?</span>
             </h2>
             <p className="text-lg text-slate-300 font-mono mt-6">
-              Let&apos;s build what&apos;s next.
+              Stop wasting hours on manual tasks. Test our live demos or tell us what you need.
             </p>
           </div>
 

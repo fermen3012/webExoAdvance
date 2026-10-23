@@ -68,15 +68,15 @@ export function ModernParallaxShowcase() {
         <div className="text-center max-w-3xl mx-auto mb-16 sm:mb-20">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1E3A8A]/50 border border-[#00E5FF]/40 text-[#00E5FF] font-mono text-xs font-semibold mb-4 shadow-[0_0_15px_rgba(0,229,255,0.15)]">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>KINETIC ARCHITECTURE // PARALLAX LAYER</span>
+            <span>PRODUCT SUITE // PARALLAX SHOWCASE</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight font-sans">
-            Systems Engineered with <span className="text-[#00E5FF]">Operational Depth</span>
+            Software Built to <span className="text-[#00E5FF]">Sell, Automate & Scale</span>
           </h2>
 
           <p className="text-base text-[#94A3B8] mt-4 leading-relaxed font-normal">
-            Visualize how our software layers, data telemetry, and cloud hardware dynamically interlock to empower your business.
+            Experience how our touchscreen kiosks, executive dashboards, and cloud platforms work together to give your business an unfair advantage.
           </p>
         </div>
 
@@ -92,13 +92,13 @@ export function ModernParallaxShowcase() {
             </div>
 
             <span className="text-[10px] font-mono tracking-widest text-[#00E5FF] uppercase block font-bold">
-              LAYER 01 // FRONT-LINE EXECUTION
+              FLAGSHIP SAAS // RESTAURANT TECH
             </span>
             <h3 className="text-2xl font-black text-white font-sans mt-1 mb-3">
               Exo Server Restaurant OS
             </h3>
             <p className="text-xs text-[#94A3B8] leading-relaxed mb-6">
-              Self-service kiosks and real-time KDS synchronized with microsecond latency. Eliminate floor bottlenecks with zero hardware lock-in.
+              Touchscreen self-service kiosks and real-time kitchen display screens that slash wait times, boost upsells, and eliminate lost order tickets.
             </p>
 
             <div className="p-3.5 rounded-xl bg-[#070B14] border border-white/5 font-mono text-xs space-y-2 mb-6">
@@ -116,7 +116,7 @@ export function ModernParallaxShowcase() {
               href="/restaurant-technology"
               className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[#00E5FF] hover:text-white uppercase tracking-wider transition-colors group/link"
             >
-              <span>View POS Ecosystem</span>
+              <span>Explore Restaurant Demo</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
@@ -131,23 +131,23 @@ export function ModernParallaxShowcase() {
             </div>
 
             <span className="text-[10px] font-mono tracking-widest text-purple-400 uppercase block font-bold">
-              LAYER 02 // REAL-TIME DECISION ENGINE
+              REAL-TIME C-SUITE TELEMETRY
             </span>
             <h3 className="text-2xl font-black text-white font-sans mt-1 mb-3">
-              Power BI & Data Pipelines
+              Power BI & Data Dashboards
             </h3>
             <p className="text-xs text-[#94A3B8] leading-relaxed mb-6">
-              Executive telemetry without manual spreadsheets. Unified dashboards that reveal location margins and profitability instantly.
+              Live executive dashboards that reveal daily sales, product margins, and stock levels instantly on your phone or desktop.
             </p>
 
             <div className="p-3.5 rounded-xl bg-[#070B14] border border-white/5 font-mono text-xs space-y-2 mb-6">
               <div className="flex justify-between text-slate-400">
-                <span>ETL Pipelines</span>
-                <span className="text-purple-300 font-bold">Automated Daily</span>
+                <span>Daily Reports</span>
+                <span className="text-purple-300 font-bold">100% Automated</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>Executive Visibility</span>
-                <span className="text-white">100% C-Suite</span>
+                <span className="text-white">Real-Time Mobile</span>
               </div>
             </div>
 
@@ -155,7 +155,7 @@ export function ModernParallaxShowcase() {
               href="/business-intelligence"
               className="inline-flex items-center gap-2 text-xs font-mono font-bold text-purple-400 hover:text-white uppercase tracking-wider transition-colors group/link"
             >
-              <span>View BI Dashboards</span>
+              <span>Explore BI Dashboards</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
             </Link>
           </motion.div>
@@ -170,19 +170,19 @@ export function ModernParallaxShowcase() {
             </div>
 
             <span className="text-[10px] font-mono tracking-widest text-emerald-400 uppercase block font-bold">
-              LAYER 03 // TAILORED CLOUD PLATFORM
+              CUSTOM WEB PLATFORMS & AI
             </span>
             <h3 className="text-2xl font-black text-white font-sans mt-1 mb-3">
-              Custom Engineering & AI
+              Tailored Platforms & AI
             </h3>
             <p className="text-xs text-[#94A3B8] leading-relaxed mb-6">
-              Scalable cloud platforms on Next.js 16 with autonomous AI agents that qualify incoming inquiries in less than 5 seconds.
+              Fast, proprietary web software and autonomous AI agents that analyze incoming client requests and reply with custom quotes in under 5 seconds.
             </p>
 
             <div className="p-3.5 rounded-xl bg-[#070B14] border border-white/5 font-mono text-xs space-y-2 mb-6">
               <div className="flex justify-between text-slate-400">
                 <span>Availability</span>
-                <span className="text-emerald-400 font-bold">99.99% Global Edge</span>
+                <span className="text-emerald-400 font-bold">99.99% Cloud SLA</span>
               </div>
               <div className="flex justify-between text-slate-400">
                 <span>AI Ingestion</span>
@@ -194,7 +194,7 @@ export function ModernParallaxShowcase() {
               href="/software-development"
               className="inline-flex items-center gap-2 text-xs font-mono font-bold text-emerald-400 hover:text-white uppercase tracking-wider transition-colors group/link"
             >
-              <span>View Custom Dev</span>
+              <span>Explore Custom Software</span>
               <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-1 transition-transform" />
             </Link>
           </motion.div>

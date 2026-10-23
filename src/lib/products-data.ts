@@ -10,6 +10,7 @@ export interface ProductServiceItem {
   pricingModel: string;
   impactMetrics: { label: string; value: string }[];
   routeHref: string;
+  demoHref?: string;
 }
 
 export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
@@ -20,15 +21,15 @@ export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
     program: "Hospitality & Restaurant Suite",
     badge: "Flagship SaaS",
     description:
-      "Industrial-grade operating system for modern restaurants featuring unified point-of-sale integration, self-service kiosks, and real-time operations control.",
+      "Eliminate line bottlenecks and boost check size. An all-in-one POS and kitchen display operating system with touchscreen self-service kiosks and digital QR ordering.",
     targetClient: "High-volume restaurants, food franchises, dark kitchens, and modern cafes.",
     features: [
-      "Interactive touchscreen self-service ordering kiosks (Self-service ordering)",
-      "Dynamic digital menus and instant QR code ordering with zero app downloads",
-      "Kitchen Display System (KDS) with dispatch routing and preparation timers",
+      "Interactive touchscreen self-service ordering kiosks",
+      "Instant contactless QR menus with zero app downloads",
+      "Real-time Kitchen Display Systems (KDS) with dispatch timers",
       "Mobile handheld terminals for floor waitstaff",
-      "Real-time automated inventory tracking with low-stock alerts",
-      "Omnichannel management consolidating delivery, dine-in, and takeout",
+      "Automated live inventory tracking with low-stock alerts",
+      "Unified sales dashboard for dine-in, takeout, and delivery",
     ],
     pricingModel: "Monthly subscription per terminal/location + Hardware deployment",
     impactMetrics: [
@@ -37,6 +38,7 @@ export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
       { label: "Kitchen Order Errors", value: "Near 0%" },
     ],
     routeHref: "/restaurant-technology",
+    demoHref: "/restaurant-technology#demo",
   },
   {
     id: "exo-bi-analytics-suite",
@@ -45,12 +47,12 @@ export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
     program: "Executive Intelligence & Analytics",
     badge: "Enterprise Analytics",
     description:
-      "Data engineering, automated ETL pipelines, and executive dashboards with continuous synchronization of strategic business KPIs.",
+      "Stop digging through chaotic spreadsheets. Get real-time executive dashboards and mobile telemetry tracking your sales, margins, and inventory health live.",
     targetClient: "CEOs, CFOs, operations directors, and scaling enterprises managing dispersed data sources.",
     features: [
       "Unified C-Suite dashboards (Finance, Sales, Inventory, and HR)",
       "Real-time operational KPI telemetry with automated trigger alerts",
-      "Scalable Data Warehouse pipelines (PostgreSQL, Supabase, BigQuery)",
+      "Automated daily synchronization without manual report drafting",
       "Predictive models forecasting sales, demand seasonality, and profit margins",
       "Automated scheduled executive briefings and email digests",
       "Enterprise-grade governance with granular Row Level Security (RLS)",
@@ -62,6 +64,7 @@ export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
       { label: "Return on Investment", value: "3x in 90 days" },
     ],
     routeHref: "/business-intelligence",
+    demoHref: "/business-intelligence#demo",
   },
   {
     id: "exo-custom-core-software",
@@ -70,11 +73,11 @@ export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
     program: "Tailored Software Architecture",
     badge: "High-Performance Cloud",
     description:
-      "Custom web platforms and bespoke SaaS systems built with modern microservices, TypeScript, and Next.js, serving as your business's technological exoskeleton.",
+      "Replace disjointed off-the-shelf software with a custom web platform built 100% around your business workflow, team permissions, and client portal.",
     targetClient: "Growing enterprises that have outgrown rigid off-the-shelf software and chaotic spreadsheets.",
     features: [
       "Ultra-fast progressive web applications powered by Next.js 16 and React 19",
-      "Custom internal management systems (lightweight ERP, bespoke CRM portals)",
+      "Bespoke internal management systems (lightweight ERP, custom CRM portals)",
       "Automated business workflows driven by cloud functions and real-time webhooks",
       "Seamless payment gateway integrations (Stripe, Square, PayPal) and third-party APIs",
       "Serverless cloud infrastructure with 99.99% SLA uptime and sub-second latency",
@@ -87,6 +90,7 @@ export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
       { label: "Manual Effort Saved", value: "Up to 25 hrs/wk" },
     ],
     routeHref: "/software-development",
+    demoHref: "/software-development#demo",
   },
   {
     id: "exo-ai-workflow-agents",
@@ -95,7 +99,7 @@ export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
     program: "Artificial Intelligence Automation",
     badge: "AI Powered",
     description:
-      "Autonomous agents for instant inbound lead qualification, personalized AI email responses, and automated operational orchestration.",
+      "Never lose a high-value lead again. Autonomous AI that scores inbound inquiries, analyzes commercial intent, and drafts personalized proposals in under 5 seconds.",
     targetClient: "Sales teams, professional service firms, and fast-growing B2B commerce platforms.",
     features: [
       "Instant automated lead qualification and algorithmic scoring (0 to 100)",
@@ -112,5 +116,6 @@ export const EXO_PRODUCTS_SERVICES: ProductServiceItem[] = [
       { label: "Lead Qualification", value: "100% Automated" },
     ],
     routeHref: "/solutions",
+    demoHref: "/solutions#demo",
   },
 ];
