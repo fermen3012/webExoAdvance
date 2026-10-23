@@ -59,8 +59,8 @@
         "src/components/admin/admin-auth-guard.tsx",
         "src/components/admin/crm-dashboard.tsx",
         "src/components/admin/lead-detail-modal.tsx",
-        "src/components/layout/footer.tsx",
-        "src/components/layout/navbar.tsx"
+        "src/components/admin/services-catalog-tab.tsx",
+        "src/components/layout/footer.tsx"
       ]
     },
     {
@@ -71,9 +71,9 @@
       "sample_files": [
         "src/lib/ai/agent.ts",
         "src/lib/email/send-email.ts",
+        "src/lib/products-data.ts",
         "src/lib/security/rate-limiter.ts",
-        "src/lib/supabase/client.ts",
-        "src/lib/supabase/server.ts"
+        "src/lib/supabase/client.ts"
       ]
     }
   ],
@@ -84,5 +84,5 @@
       "relation": "imports_and_uses"
     }
   ],
-  "last_synced": "2026-10-23T01:46:53.948Z"
+  "last_synced": "2026-10-23T17:45:27.901Z"
 }

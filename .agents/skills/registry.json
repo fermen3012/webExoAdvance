@@ -6,13 +6,13 @@
     {
       "id": "backend-architecture",
       "role": "Backend Architect & Distributed Systems Specialist",
-      "triggers": ["api", "backend", "base de datos", "database", "endpoint", "supabase", "query", "sql", "transaccion", "transaction", "orm", "prisma", "drizzle", "migration", "migracion", "servidor", "server", "rls", "idempotency"],
+      "triggers": ["api", "backend", "base de datos", "database", "endpoint", "supabase", "supabase mcp", "postgres mcp", "query", "sql", "transaccion", "transaction", "orm", "prisma", "drizzle", "migration", "migracion", "servidor", "server", "rls", "idempotency"],
       "path": ".agents/skills/backend-architecture/SKILL.md"
     },
     {
       "id": "frontend-architecture",
       "role": "Frontend Architect & Client Performance Specialist",
-      "triggers": ["frontend", "componente", "component", "hook", "estado", "state", "react", "next.js", "props", "context", "zustand", "interfaz reactiva", "cliente", "rsc", "core web vitals"],
+      "triggers": ["frontend", "componente", "component", "hook", "estado", "state", "react", "next.js", "props", "context", "zustand", "interfaz reactiva", "cliente", "rsc", "core web vitals", "vercel", "vercel mcp", "deployments", "deployment logs"],
       "path": ".agents/skills/frontend-architecture/SKILL.md"
     },
     {

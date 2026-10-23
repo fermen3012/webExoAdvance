@@ -23,3 +23,9 @@ Governs client-side software architecture, component modularity, state flow, and
   - **CLS (Cumulative Layout Shift) = 0:** Pre-reserve layout dimensions for async elements, skeletons, and media.
   - **INP (Interaction to Next Paint) < 100ms:** Offload heavy computations from the main thread; use transitions (`useTransition`) for non-urgent updates.
 - **Error Boundaries & Suspense Skeletons:** Wrap async and failure-prone components in granular `ErrorBoundary` and `Suspense` boundaries to prevent blank screen crashes.
+
+## 4. Vercel Deployment & Observability MCP Tooling
+When `.mcp.json` is configured with the Vercel MCP server:
+- **Build & Deployment Health Inspection:** Query deployment statuses and recent commit builds directly via MCP to diagnose build-time breakages or edge function errors.
+- **Runtime Log Telemetry:** Fetch live serverless function logs and runtime exceptions to diagnose production bugs without manual dashboard navigation.
+- **Environment Variable Synchronization:** Inspect non-sensitive project environment variables across environments (`preview`, `production`) to ensure build-time parity.

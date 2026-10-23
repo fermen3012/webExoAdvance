@@ -24,3 +24,9 @@ Governs technical standards for server-side logic, database reliability, perform
 ## 4. Error Handling & Observability (RFC 7807)
 - **Standardized Error Contracts:** Return structured machine-readable error responses adhering to RFC 7807 (Problem Details: `type`, `title`, `status`, `detail`, `code`).
 - **Telemetry Sanitization:** Never leak internal stack traces, database schema details, or environment secrets to client-facing error payloads.
+
+## 5. Supabase & PostgreSQL MCP Tooling
+When `.mcp.json` is configured with Supabase and Postgres MCP servers:
+- **Direct Schema Inspection:** Use the MCP tools to inspect foreign keys, constraints, and column types before proposing migrations or drafting API payloads.
+- **RLS Policy Auditing:** Query active PostgreSQL policies (`pg_policies`) via MCP to ensure zero security regressions on tenant tables.
+- **Safe Read-Only Prototyping:** Run parameterized `SELECT` queries to verify real-time data shapes without leaving the agent workflow. Write operations must still be committed through tracked migration files.

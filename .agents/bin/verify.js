@@ -58,8 +58,22 @@ function checkSecrets() {
     /sk_live_[A-Za-z0-9_]{16,}/,
     /ghp_[A-Za-z0-9_]{20,}/,
     /AIzaSy[A-Za-z0-9_\-]{25,}/,
+    /sbp_[A-Za-z0-9_]{20,}/,
+    /vck_[A-Za-z0-9_]{20,}/,
     /-----BEGIN (?:RSA )?PRIVATE KEY-----/
   ];
+
+  // Auditoría específica de .mcp.json para garantizar cero claves hardcodeadas
+  const mcpConfigPath = path.join(PROJECT_ROOT, '.mcp.json');
+  if (fs.existsSync(mcpConfigPath)) {
+    try {
+      const mcpContent = fs.readFileSync(mcpConfigPath, 'utf8');
+      if (mcpContent.includes('sbp_') || mcpContent.includes('vck_') || mcpContent.includes('postgres://') && !mcpContent.includes('${DATABASE_URL}')) {
+        results.secretAudit.details = 'Token o credencial real hardcodeada detectada en .mcp.json. Usa variables de entorno ${...}.';
+        return;
+      }
+    } catch (e) {}
+  }
 
   const codeFiles = [];
   const ignoredDirs = new Set(['node_modules', '.git', '.next', 'dist', 'build', '.agents']);
