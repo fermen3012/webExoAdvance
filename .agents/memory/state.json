@@ -27,12 +27,18 @@
       "description": "Integración de MCP Server Oficial de Resend (136 herramientas) y Diagnóstico de Despacho en Vercel",
       "status": "COMPLETED",
       "verification": "MCP server resend configurado globalmente en mcp_config.json y .mcp.json, entrega 200 OK verificada en Resend"
+    },
+    {
+      "id": "M05",
+      "description": "Detección Automática de Idioma en Agente de Ventas (Karen Mendoza) y Plantillas Consultivas Bilingües (ES/EN)",
+      "status": "COMPLETED",
+      "verification": "QA Gate PASS, simulación bilingüe validada (ES/EN) con subject, body y footer localizados"
     }
   ],
   "in_progress": [],
   "priorities": [
-    "Asegurar que RESEND_API_KEY esté configurada en las Variables de Entorno de Vercel",
-    "Vincular URLs reales de demostración interactiva cuando sean suministradas por el usuario"
+    "Subir cambios a GitHub para despliegue automático en Vercel",
+    "Evaluar implementación de Webhook de conversación continua multieslabón"
   ],
   "decisions": [
     {
@@ -58,6 +64,12 @@
       "date": "2026-10-24T00:50:00.000Z",
       "title": "Aprovisionamiento de Resend MCP Server y Auditoría de Envío a Vercel",
       "impact": "Capacidad MCP completa para monitorear eventos de entrega, reintentos y webhooks de Resend"
+    },
+    {
+      "id": "DEC-005",
+      "date": "2026-10-24T02:27:00.000Z",
+      "title": "Reconocimiento y Respuesta en el Mismo Idioma del Cliente",
+      "impact": "El agente Karen Mendoza detecta español/inglés y responde 100% en el idioma del usuario"
     }
   ],
   "session_notes": "Ecosistema inicializado con memoria viva persistente y QA Gate activo."

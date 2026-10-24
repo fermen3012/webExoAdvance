@@ -1,10 +1,12 @@
 import { Resend } from "resend";
+import { isSpanishText } from "@/lib/utils";
 
 export interface SendLeadEmailParams {
   toEmail: string;
   clientName: string;
   service: string;
   aiResponseContent: string;
+  language?: "es" | "en";
 }
 
 export interface AdminLeadNotificationParams {
@@ -36,7 +38,7 @@ function resolveVerifiedSender(fallback: string): string {
 export async function sendLeadEmailToClient(params: SendLeadEmailParams): Promise<{ success: boolean; id?: string; error?: string }> {
   try {
     const apiKey = process.env.RESEND_API_KEY;
-    const fromEmail = resolveVerifiedSender("Exo Advance Sales <contact@exoadvancellc.com>");
+    const fromEmail = resolveVerifiedSender("Karen Mendoza <contact@exoadvancellc.com>");
     const replyToEmail = process.env.RESEND_REPLY_TO || "contact@exoadvancellc.com";
 
     if (!apiKey) {
@@ -49,6 +51,28 @@ export async function sendLeadEmailToClient(params: SendLeadEmailParams): Promis
     }
 
     const resend = new Resend(apiKey);
+    const isEs = params.language === "es" || isSpanishText(params.aiResponseContent);
+
+    const serviceEsMap: Record<string, string> = {
+      "Restaurant Technology": "Tecnología para Restaurantes",
+      "Custom Software": "Desarrollo de Software",
+      "Business Intelligence": "Inteligencia de Negocios",
+      "Other": "Soluciones Tecnológicas",
+    };
+
+    const serviceDisplay = isEs ? (serviceEsMap[params.service] || params.service) : params.service;
+    const emailSubject = isEs
+      ? `Re: Tu consulta sobre ${serviceDisplay} — Soluciones Exo Advance`
+      : `Re: Your ${params.service} Inquiry — Exo Advance Solutions`;
+
+    const subHeader = isEs ? "EXO ADVANCE LLC // SOLUCIONES CORPORATIVAS" : "EXO ADVANCE LLC // CLIENT SOLUTIONS";
+    const headerTitle = isEs ? "Consultoría Personalizada de Proyecto" : "Tailored Project Consultation";
+    const tagline = isEs
+      ? "Exo Advance LLC &bull; Soluciones a la medida de tu negocio, a tu manera"
+      : "Exo Advance LLC &bull; Tailored Solutions for Your Business, Your Way";
+    const replyInstruction = isEs
+      ? 'Puedes responder directamente a este correo o escribirnos a <a href="mailto:contact@exoadvancellc.com" style="color: #00E5FF; text-decoration: none;">contact@exoadvancellc.com</a>'
+      : 'You can reply directly to this email or reach us at <a href="mailto:contact@exoadvancellc.com" style="color: #00E5FF; text-decoration: none;">contact@exoadvancellc.com</a>';
 
     const htmlContent = `
       <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 640px; margin: 0 auto; background-color: #0A0F1A; color: #F8FAFC; border: 1px solid rgba(0, 229, 255, 0.3); border-radius: 16px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.6);">
@@ -56,10 +80,10 @@ export async function sendLeadEmailToClient(params: SendLeadEmailParams): Promis
         <!-- Header -->
         <div style="background: linear-gradient(90deg, #1E3A8A 0%, #0A0F1A 100%); padding: 32px 28px; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
           <div style="color: #00E5FF; font-family: monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px;">
-            EXO ADVANCE LLC // CLIENT SOLUTIONS
+            ${subHeader}
           </div>
           <h1 style="color: #FFFFFF; font-size: 22px; font-weight: 800; margin: 0;">
-            Tailored Project Consultation
+            ${headerTitle}
           </h1>
         </div>
 
@@ -70,8 +94,8 @@ ${params.aiResponseContent}
 
         <!-- Footer -->
         <div style="background-color: #050811; padding: 24px 28px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-family: monospace; font-size: 11px; color: #64748B; text-align: center;">
-          <p style="margin: 0 0 6px 0; color: #94A3B8;">Exo Advance LLC &bull; Tailored Solutions for Your Business, Your Way</p>
-          <p style="margin: 0;">You can reply directly to this email or reach us at <a href="mailto:contact@exoadvancellc.com" style="color: #00E5FF; text-decoration: none;">contact@exoadvancellc.com</a></p>
+          <p style="margin: 0 0 6px 0; color: #94A3B8;">${tagline}</p>
+          <p style="margin: 0;">${replyInstruction}</p>
         </div>
 
       </div>
@@ -81,7 +105,7 @@ ${params.aiResponseContent}
       from: fromEmail,
       to: [params.toEmail],
       replyTo: replyToEmail,
-      subject: `Re: Your ${params.service} Inquiry — Exo Advance Solutions`,
+      subject: emailSubject,
       html: htmlContent,
       text: params.aiResponseContent,
     });
