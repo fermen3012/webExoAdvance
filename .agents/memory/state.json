@@ -21,12 +21,18 @@
       "description": "Configuración de Remitente Verificado en Resend (contact@exoadvancellc.com), Agente de Ventas Consultivo y Alertas Internas de Leads",
       "status": "COMPLETED",
       "verification": "Despacho 200 OK validado contra Resend API, QA Gate PASS, push a origin/main (commit 0307a05)"
+    },
+    {
+      "id": "M04",
+      "description": "Integración de MCP Server Oficial de Resend (136 herramientas) y Diagnóstico de Despacho en Vercel",
+      "status": "COMPLETED",
+      "verification": "MCP server resend configurado globalmente en mcp_config.json y .mcp.json, entrega 200 OK verificada en Resend"
     }
   ],
   "in_progress": [],
   "priorities": [
-    "Vincular URLs reales de demostración interactiva cuando sean suministradas por el usuario",
-    "Monitorear indexación de Google para rich snippets SoftwareApplication"
+    "Asegurar que RESEND_API_KEY esté configurada en las Variables de Entorno de Vercel",
+    "Vincular URLs reales de demostración interactiva cuando sean suministradas por el usuario"
   ],
   "decisions": [
     {
@@ -46,6 +52,12 @@
       "date": "2026-10-24T00:33:30.000Z",
       "title": "Despacho con Dominio Verificado exoadvancellc.com y Notificaciones B2B",
       "impact": "Eliminación del error 422 de Resend sandbox, respuestas de venta y alerta al inbox corporativo"
+    },
+    {
+      "id": "DEC-004",
+      "date": "2026-10-24T00:50:00.000Z",
+      "title": "Aprovisionamiento de Resend MCP Server y Auditoría de Envío a Vercel",
+      "impact": "Capacidad MCP completa para monitorear eventos de entrega, reintentos y webhooks de Resend"
     }
   ],
   "session_notes": "Ecosistema inicializado con memoria viva persistente y QA Gate activo."

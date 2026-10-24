@@ -19,12 +19,24 @@ export interface AdminLeadNotificationParams {
 }
 
 /**
+ * Resolves a verified sender address. If the environment variable contains an unverified
+ * address or typo from older deploys, safely falls back to the verified exoadvancellc.com domain.
+ */
+function resolveVerifiedSender(fallback: string): string {
+  const envSender = process.env.RESEND_FROM_EMAIL?.trim();
+  if (envSender && (envSender.includes("@exoadvancellc.com") || envSender.includes("onboarding@resend.dev"))) {
+    return envSender;
+  }
+  return fallback;
+}
+
+/**
  * Sends an automated sales consultant response email to the prospective client using Resend.
  */
 export async function sendLeadEmailToClient(params: SendLeadEmailParams): Promise<{ success: boolean; id?: string; error?: string }> {
   try {
     const apiKey = process.env.RESEND_API_KEY;
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "Exo Advance Sales <contact@exoadvancellc.com>";
+    const fromEmail = resolveVerifiedSender("Exo Advance Sales <contact@exoadvancellc.com>");
     const replyToEmail = process.env.RESEND_REPLY_TO || "contact@exoadvancellc.com";
 
     if (!apiKey) {
@@ -97,7 +109,7 @@ export async function sendAdminNewLeadNotification(params: AdminLeadNotification
     if (!apiKey) return { success: false };
 
     const resend = new Resend(apiKey);
-    const fromEmail = process.env.RESEND_FROM_EMAIL || "Exo Advance Alerts <contact@exoadvancellc.com>";
+    const fromEmail = resolveVerifiedSender("Exo Advance Alerts <contact@exoadvancellc.com>");
     const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || "contact@exoadvancellc.com";
 
     const htmlContent = `
