@@ -63,6 +63,12 @@
       "description": "Lanzamiento de Pestaña Oficial y Landing Page B2B de OrderPoint POS & Kioskos en Florida (/orderpoint)",
       "status": "COMPLETED",
       "verification": "Pestaña 'OrderPoint POS' activa en Navbar, Calculadora Interactiva de Ahorro vs Toast/Clover, comparativa de mercado, precios transparentes ($450+$99 y $799+$99), Schema.org JSON-LD para Google y QA Gate PASS"
+    },
+    {
+      "id": "M11",
+      "description": "Página SEO de Ataque y Comparativa Directa OrderPoint vs Toast POS (/orderpoint-vs-toast)",
+      "status": "COMPLETED",
+      "verification": "Ruta /orderpoint-vs-toast creada con caso de estudio de $45k/mo, análisis de las 3 trampas de Toast, calculadora interactiva, matriz punto a punto, JSON-LD Article/FAQPage y sitemap actualizado"
     }
   ],
   "in_progress": [],

@@ -42,12 +42,13 @@ export const metadata: Metadata = {
     "AI Lead Automation Software",
     "Florida Custom Software Company",
   ],
+  metadataBase: new URL("https://www.exoadvancellc.com"),
   authors: [{ name: "Exo Advance LLC" }],
   creator: "Exo Advance LLC",
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://exoadvance.com",
+    url: "https://www.exoadvancellc.com",
     title: "Exo Advance LLC | Tailored Solutions for Your Business, Your Way",
     description:
       "All your operations in a single control panel. Custom SaaS, Restaurant POS kiosks, and executive business intelligence dashboards engineered for growth.",

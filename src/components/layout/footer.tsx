@@ -89,6 +89,11 @@ export function Footer() {
                   Savings vs Toast / Clover
                 </Link>
               </li>
+              <li>
+                <Link href="/orderpoint-vs-toast" className="hover:text-[#00E5FF] transition-colors text-slate-300">
+                  OrderPoint vs Toast POS (2026)
+                </Link>
+              </li>
             </ul>
           </div>
 
