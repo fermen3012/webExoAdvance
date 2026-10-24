@@ -1,8 +1,8 @@
 {
   "project": "website-exoadvance",
   "domain": "Plataforma website exoadvance",
-  "updated_at": "2026-10-23T23:46:25.000Z",
-  "active_version": "1.1.0",
+  "updated_at": "2026-10-24T00:33:30.000Z",
+  "active_version": "1.2.0",
   "milestones": [
     {
       "id": "M01",
@@ -15,6 +15,12 @@
       "description": "Transformación Comercial de Copywriting, Botones de Live Demo y Optimización SEO B2B SaaS",
       "status": "COMPLETED",
       "verification": "QA Gate PASS, push a origin/main (commit f3ee4a0)"
+    },
+    {
+      "id": "M03",
+      "description": "Configuración de Remitente Verificado en Resend (contact@exoadvancellc.com), Agente de Ventas Consultivo y Alertas Internas de Leads",
+      "status": "COMPLETED",
+      "verification": "Despacho 200 OK validado contra Resend API, QA Gate PASS, push a origin/main (commit 0307a05)"
     }
   ],
   "in_progress": [],
@@ -34,6 +40,12 @@
       "date": "2026-10-23T23:46:25.000Z",
       "title": "Enfoque Product-Led Growth (PLG) con Demos en Vivo",
       "impact": "Eliminación de tecnicismos áridos, llamado de atención en 5s y botones de Live Demo"
+    },
+    {
+      "id": "DEC-003",
+      "date": "2026-10-24T00:33:30.000Z",
+      "title": "Despacho con Dominio Verificado exoadvancellc.com y Notificaciones B2B",
+      "impact": "Eliminación del error 422 de Resend sandbox, respuestas de venta y alerta al inbox corporativo"
     }
   ],
   "session_notes": "Ecosistema inicializado con memoria viva persistente y QA Gate activo."
