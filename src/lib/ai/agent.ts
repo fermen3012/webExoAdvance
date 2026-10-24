@@ -1,6 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "@/lib/supabase/types";
-import { sendLeadEmailToClient, sendAdminNewLeadNotification } from "@/lib/email/send-email";
+import {
+  sendLeadEmailToClient,
+  sendAdminNewLeadNotification,
+  sendAdminReplyNotification,
+} from "@/lib/email/send-email";
 import { isSpanishText } from "@/lib/utils";
 
 export interface AIAnalysisResult {
@@ -326,4 +330,279 @@ Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
       : `Prospective lead requesting specialized ${leadData.service} solutions.`,
     recommendedResponse,
   };
+}
+
+export interface ProcessReplyParams {
+  leadId: string;
+  leadData: {
+    full_name: string;
+    company?: string | null;
+    email: string;
+    service: string;
+  };
+  clientReply: string;
+  conversationHistory: Array<{
+    type: string;
+    content: string;
+  }>;
+}
+
+/**
+ * Multi-Turn Conversational AI Engine
+ * Processes subsequent email replies from clients, answers their questions,
+ * and maintains conversational momentum signed as Karen Mendoza.
+ */
+export async function processLeadReplyWithAI(params: ProcessReplyParams): Promise<{
+  recommendedResponse: string;
+  sentiment: string;
+  aiScore: number;
+} | null> {
+  try {
+    const apiKey = process.env.OPENAI_API_KEY;
+    const isSpanish = isSpanishText(params.clientReply);
+    let aiResponseText = "";
+    let sentiment = "High Interest";
+    let aiScore = 92;
+
+    if (apiKey) {
+      try {
+        const historyText = params.conversationHistory
+          .map((h) => `${h.type === "ai_response" ? "Karen Mendoza (Exo Advance)" : params.leadData.full_name}: ${h.content}`)
+          .join("\n\n");
+
+        const prompt = `You are Karen Mendoza, Senior Solutions & Sales Specialist for Exo Advance LLC (https://www.exoadvancellc.com). We engineer custom SaaS, Exo Server restaurant kiosk systems, custom mobile apps, and business intelligence solutions.
+
+A prospective client who previously contacted us has just REPLIED to our email.
+
+Client Context:
+- Name: ${params.leadData.full_name}
+- Company: ${params.leadData.company || "N/A"}
+- Service Requested: ${params.leadData.service}
+
+Previous Conversation History:
+${historyText}
+
+NEW CLIENT REPLY:
+"${params.clientReply}"
+
+CRITICAL INSTRUCTIONS:
+1. LANGUAGE: Detect the language of the client's reply. If Spanish, write 100% in natural, warm, professional Latin American Spanish. If English, write in English.
+2. ANSWER THEIR DOUBTS THOROUGHLY: Directly address what they asked (e.g. restaurant app features, ordering workflow, POS integration, hardware, timelines, pricing structure).
+3. CONSULTATIVE SALES CLOSING: Advance the conversation toward a concrete next step (e.g. proposing a 10-minute live demo or asking about their specific requirements like number of tables, branches, or features).
+4. SIGNATURE: Sign as Karen Mendoza, Senior Solutions & Sales Specialist, Exo Advance LLC.
+
+Return a valid JSON object with keys:
+- "sentiment": "High Interest" | "Urgent" | "Standard Inquiry" | "Exploring"
+- "aiScore": number (80 to 98)
+- "recommendedResponse": full email response text addressed to ${params.leadData.full_name}.`;
+
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: prompt }],
+            response_format: { type: "json_object" },
+            temperature: 0.7,
+          }),
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          const parsed = JSON.parse(data.choices[0].message.content);
+          aiResponseText = parsed.recommendedResponse;
+          sentiment = parsed.sentiment || "High Interest";
+          aiScore = parsed.aiScore || 92;
+        } else {
+          aiResponseText = generateConversationalFallback(params);
+        }
+      } catch {
+        aiResponseText = generateConversationalFallback(params);
+      }
+    } else {
+      aiResponseText = generateConversationalFallback(params);
+    }
+
+    const supabase = getSupabaseBackendClient();
+
+    // 1. Record Karen's AI follow-up in interactions
+    await supabase.from("interactions").insert({
+      lead_id: params.leadId,
+      type: "ai_response",
+      content: aiResponseText,
+      sentiment,
+      ai_score: aiScore,
+      metadata: {
+        engine: apiKey ? "openai-gpt-4o-mini" : "exo-ai-rules-v1",
+        stage: "multi_turn_reply",
+        generated_at: new Date().toISOString(),
+      },
+    });
+
+    // 2. Dispatch the email response to the client
+    await sendLeadEmailToClient({
+      toEmail: params.leadData.email,
+      clientName: params.leadData.full_name,
+      service: params.leadData.service,
+      aiResponseContent: aiResponseText,
+      language: isSpanish ? "es" : "en",
+    });
+
+    // 3. Notify admin that client replied and Karen responded
+    await sendAdminReplyNotification({
+      leadId: params.leadId,
+      fullName: params.leadData.full_name,
+      email: params.leadData.email,
+      service: params.leadData.service,
+      clientReply: params.clientReply,
+      aiResponse: aiResponseText,
+    });
+
+    // 4. Update lead status in Supabase
+    await supabase
+      .from("leads")
+      .update({
+        status: "active_conversation",
+        notes: `[Active Conversation] Client replied: "${params.clientReply.substring(0, 100)}" | Karen responded.`,
+      })
+      .eq("id", params.leadId);
+
+    return {
+      recommendedResponse: aiResponseText,
+      sentiment,
+      aiScore,
+    };
+  } catch (err) {
+    console.error("[EXO_AI_REPLY_PROCESS_ERROR]", err);
+    return null;
+  }
+}
+
+/**
+ * Intelligent domain-specific rule fallback for follow-up conversations.
+ */
+function generateConversationalFallback(params: ProcessReplyParams): string {
+  const isSpanish = isSpanishText(params.clientReply);
+  const textLower = params.clientReply.toLowerCase();
+  const name = params.leadData.full_name;
+
+  if (isSpanish) {
+    // Topic: Restaurant app / pedidos / comandas
+    if (
+      textLower.includes("restaurante") ||
+      textLower.includes("app") ||
+      textLower.includes("kiosco") ||
+      textLower.includes("comanda") ||
+      textLower.includes("pedido") ||
+      textLower.includes("menu") ||
+      textLower.includes("mesa") ||
+      textLower.includes("delivery")
+    ) {
+      return `Hola ${name},
+
+¡Excelente! En Exo Advance nos especializamos justamente en tecnología para restaurantes y aplicaciones de pedidos digitales.
+
+Para restaurantes desarrollamos dos tipos de soluciones que pueden operar de forma integrada o independiente según tus necesidades:
+
+1. Aplicación de Pedidos y Delivery Propio (iOS, Android y Web):
+   - Tus clientes ordenan directo desde su teléfono escaneando un código QR en mesa o desde casa para delivery/takeout.
+   - Sin pagar el 25%-30% de comisión a plataformas de terceros como DoorDash o UberEats.
+   - Pasarela de cobros segura integrada con depósito directo a tu cuenta bancaria.
+
+2. Exo Server Restaurant OS (Punto de Venta y Kioscos Táctiles):
+   - Kioscos de autoservicio para caja que eliminan filas y aumentan el ticket promedio en +$4.20.
+   - Pantalla digital de cocina (KDS) para que los pedidos lleguen al chef en tiempo real sin papel.
+   - Panel administrativo para control de stock de insumos, recetas y reportes de ventas diarias.
+
+Para recomendarte la mejor arquitectura y darte un presupuesto exacto:
+1. ¿Tu restaurante opera principalmente con servicio en mesa, para llevar (delivery/pickup), o un modelo mixto?
+2. ¿Actualmente ya cuentas con una sucursal en marcha, o estás en fase de planificación y apertura?
+
+Si lo deseas, con mucho gusto podemos coordinar una breve llamada de 10 minutos para mostrarte una demostración en vivo de la app en acción. ¿Qué día y horario te quedaría mejor?
+
+Saludos cordiales,
+
+Karen Mendoza
+Senior Solutions & Sales Specialist
+Exo Advance LLC — Soluciones a la medida de tu negocio
+Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
+    }
+
+    // Topic: Pricing / Presupuesto / Cuánto cuesta
+    if (
+      textLower.includes("precio") ||
+      textLower.includes("costo") ||
+      textLower.includes("cuanto") ||
+      textLower.includes("presupuesto") ||
+      textLower.includes("cotiz") ||
+      textLower.includes("tarifa")
+    ) {
+      return `Hola ${name},
+
+Con mucho gusto te oriento sobre la inversión y esquemas de presupuesto para tu proyecto.
+
+En Exo Advance estructuramos las soluciones con dos modalidades para que elijas la más conveniente para tu negocio:
+
+1. Modelo SaaS Mensual (Llave en Mano):
+   - Inversión inicial accesible que incluye infraestructura cloud, servidores de alto rendimiento, mantenimiento preventivo y soporte técnico continuo.
+2. Desarrollo a la Medida (Código Propietario):
+   - Inversión por etapas de desarrollo con entrega de propiedad total del código fuente y personalización al 100%.
+
+Para prepararte una propuesta formal y cerrada sin sobrecostos:
+¿Cuáles son las 2 o 3 funciones indispensables que debe tener el sistema en tu primera versión?
+
+Si tienes 10 minutos disponibles hoy o mañana, podemos tener una llamada rápida para definir el alcance exacto y prepararte la cotización formal de inmediato. ¿Qué horario te queda bien?
+
+Saludos cordiales,
+
+Karen Mendoza
+Senior Solutions & Sales Specialist
+Exo Advance LLC — Soluciones a la medida de tu negocio
+Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
+    }
+
+    // Default conversational reply in Spanish
+    return `Hola ${name},
+
+Muchas gracias por los detalles que me compartes. Entiendo perfectamente lo que necesitas y podemos desarrollarlo a la medida de tus procesos.
+
+En Exo Advance construimos plataformas diseñadas para operar con total estabilidad y escalar conforme tu negocio crezca, con integraciones limpias, seguridad empresarial y soporte prioritario.
+
+Para dar el siguiente paso y estructurar el plan de trabajo:
+¿Tienes alguna fecha límite o meta en la que te gustaría tener el sistema listo y funcionando?
+
+También te invito a coordinar una llamada de 10 minutos o una demo en vivo por videollamada para aclarar cualquier duda técnica y mostrarte ejemplos de sistemas similares que ya tenemos en producción. Dime qué día te queda mejor.
+
+Quedo muy atenta a tus comentarios.
+
+Saludos cordiales,
+
+Karen Mendoza
+Senior Solutions & Sales Specialist
+Exo Advance LLC — Soluciones a la medida de tu negocio
+Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
+  }
+
+  // English fallback
+  return `Hi ${name},
+
+Thank you for providing those details! We completely understand what you are looking to achieve, and Exo Advance is ideally positioned to engineer this solution for your business.
+
+We build custom high-performance cloud software, specialized restaurant operating systems, and automated dashboards tailored 100% to your workflow.
+
+To help us scope your solution accurately:
+1. What is your target timeline for launching?
+2. Would you be available for a brief 10-minute discovery call or live product demo this week?
+
+Please feel free to share what day and time works best for you, and I will be happy to coordinate our session.
+
+Best regards,
+
+Karen Mendoza
+Senior Solutions & Sales Specialist
+Exo Advance LLC — Tailored Solutions for Your Business, Your Way
+Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
 }

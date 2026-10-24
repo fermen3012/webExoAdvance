@@ -170,3 +170,60 @@ export async function sendAdminNewLeadNotification(params: AdminLeadNotification
     return { success: false };
   }
 }
+
+export interface AdminReplyNotificationParams {
+  leadId: string;
+  fullName: string;
+  email: string;
+  service: string;
+  clientReply: string;
+  aiResponse: string;
+}
+
+/**
+ * Sends an alert to the admin whenever a client replies to Karen Mendoza and Karen responds.
+ */
+export async function sendAdminReplyNotification(params: AdminReplyNotificationParams): Promise<{ success: boolean; id?: string }> {
+  try {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) return { success: false };
+
+    const resend = new Resend(apiKey);
+    const fromEmail = resolveVerifiedSender("Exo Advance Alerts <contact@exoadvancellc.com>");
+    const adminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || "contact@exoadvancellc.com";
+
+    const htmlContent = `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #0A0F1A; color: #FFFFFF; padding: 24px; border: 1px solid #1E3A8A; border-radius: 12px;">
+        <h2 style="color: #00E5FF; margin-top: 0;">💬 Client Replied & AI Agent Responded</h2>
+        <p>A client replied to our email and Karen Mendoza has automatically answered their questions:</p>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 16px; font-size: 14px;">
+          <tr><td style="color: #64748B; padding: 6px 0;">Client:</td><td style="font-weight: bold;">${params.fullName}</td></tr>
+          <tr><td style="color: #64748B; padding: 6px 0;">Email:</td><td><a href="mailto:${params.email}" style="color: #00E5FF;">${params.email}</a></td></tr>
+          <tr><td style="color: #64748B; padding: 6px 0;">Service:</td><td style="color: #34D399; font-weight: bold;">${params.service}</td></tr>
+        </table>
+        <div style="margin-top: 16px; padding: 12px; background: #070B14; border-radius: 8px; border-left: 3px solid #38BDF8;">
+          <strong style="color: #38BDF8; font-size: 12px; text-transform: uppercase;">Client Wrote:</strong>
+          <p style="margin: 6px 0 0 0; font-size: 13px; line-height: 1.5; color: #F1F5F9;">${params.clientReply}</p>
+        </div>
+        <div style="margin-top: 12px; padding: 12px; background: #070B14; border-radius: 8px; border-left: 3px solid #10B981;">
+          <strong style="color: #10B981; font-size: 12px; text-transform: uppercase;">Karen Mendoza's AI Response Sent:</strong>
+          <p style="margin: 6px 0 0 0; font-size: 13px; line-height: 1.5; color: #E2E8F0; white-space: pre-wrap;">${params.aiResponse}</p>
+        </div>
+        <p style="margin-top: 20px; font-size: 12px; color: #64748B;">View conversation thread in CRM: <a href="https://www.exoadvancellc.com/admin/leads" style="color: #00E5FF;">CRM Portal</a></p>
+      </div>
+    `;
+
+    const { data } = await resend.emails.send({
+      from: fromEmail,
+      to: [adminEmail],
+      subject: `💬 [Reply from ${params.fullName}] - ${params.service}`,
+      html: htmlContent,
+      text: `Client ${params.fullName} (${params.email}) replied:\n"${params.clientReply}"\n\nKaren Mendoza responded:\n"${params.aiResponse}"`,
+    });
+
+    return { success: true, id: data?.id };
+  } catch (err) {
+    console.error("[EXO_ADMIN_REPLY_ALERT_ERROR]", err);
+    return { success: false };
+  }
+}
