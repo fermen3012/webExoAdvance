@@ -7,6 +7,7 @@ import { ExoLogo } from "@/components/ui/exo-logo";
 import { Menu, X, ArrowUpRight } from "lucide-react";
 
 const navItems = [
+  { label: "OrderPoint POS", href: "/orderpoint", badge: "HOT" },
   { label: "Services", href: "/services" },
   { label: "Solutions", href: "/solutions" },
   { label: "Exo Server", href: "/restaurant-technology" },
@@ -57,17 +58,28 @@ export function Navbar() {
           <nav className="hidden md:flex items-center gap-1 lg:gap-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href;
+              const isOrderPoint = item.href === "/orderpoint";
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-2 text-xs lg:text-sm font-medium tracking-wide transition-colors relative ${
+                  className={`px-3 py-2 text-xs lg:text-sm font-medium tracking-wide transition-colors relative flex items-center gap-1.5 ${
                     isActive
                       ? "text-[#00E5FF]"
+                      : isOrderPoint
+                      ? "text-white hover:text-[#00E5FF]"
                       : "text-[#64748B] hover:text-white"
                   }`}
                 >
+                  {isOrderPoint && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] shadow-[0_0_6px_#00E5FF] animate-pulse" />
+                  )}
                   {item.label}
+                  {item.badge && (
+                    <span className="text-[9px] font-mono font-bold bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40 px-1 rounded uppercase tracking-tighter">
+                      {item.badge}
+                    </span>
+                  )}
                   {isActive && (
                     <span className="absolute bottom-0 left-3 right-3 h-[2px] bg-[#00E5FF] shadow-[0_0_8px_#00E5FF]" />
                   )}
@@ -111,13 +123,23 @@ export function Navbar() {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`px-4 py-3 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-4 py-3 rounded-md text-sm font-medium transition-colors flex items-center justify-between ${
                     isActive
                       ? "bg-[#1E3A8A]/40 text-[#00E5FF] border-l-2 border-[#00E5FF]"
                       : "text-slate-300 hover:bg-[#0F172A] hover:text-white"
                   }`}
                 >
-                  {item.label}
+                  <span className="flex items-center gap-2">
+                    {item.href === "/orderpoint" && (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] shadow-[0_0_6px_#00E5FF] animate-pulse" />
+                    )}
+                    {item.label}
+                  </span>
+                  {item.badge && (
+                    <span className="text-[10px] font-mono font-bold bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40 px-1.5 py-0.5 rounded uppercase tracking-wider">
+                      {item.badge}
+                    </span>
+                  )}
                 </Link>
               );
             })}

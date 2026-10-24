@@ -51,12 +51,23 @@
       "description": "Integración del Módulo de Notificaciones SMS Instantáneas vía Twilio para Administrador en Florida (+17273072089)",
       "status": "COMPLETED",
       "verification": "SMS enviado con éxito a +17273072089 desde +17372324091 (status: delivered), módulo send-sms.ts integrado en leads.ts y webhook de Resend"
+    },
+    {
+      "id": "M09",
+      "description": "Limpieza y Depuración Integral de Leads e Interacciones de Prueba en Supabase",
+      "status": "COMPLETED",
+      "verification": "Copia de seguridad local en .agents/memory/backup_leads_20261024.json. Vaciado verificado: 0 leads, 0 interactions"
+    },
+    {
+      "id": "M10",
+      "description": "Lanzamiento de Pestaña Oficial y Landing Page B2B de OrderPoint POS & Kioskos en Florida (/orderpoint)",
+      "status": "COMPLETED",
+      "verification": "Pestaña 'OrderPoint POS' activa en Navbar, Calculadora Interactiva de Ahorro vs Toast/Clover, comparativa de mercado, precios transparentes ($450+$99 y $799+$99), Schema.org JSON-LD para Google y QA Gate PASS"
     }
   ],
   "in_progress": [],
   "priorities": [
-    "Configurar variables TWILIO en Vercel Dashboard",
-    "Completar upgrade en Twilio Console para desbloquear texto personalizado de leads"
+    "Subir a Git y desplegar en Vercel cuando el usuario lo ordene"
   ],
   "decisions": [
     {

@@ -60,17 +60,23 @@ export function Footer() {
           {/* Exo Server SaaS Ecosystem */}
           <div>
             <h3 className="text-xs font-mono font-bold tracking-widest text-white uppercase mb-4 flex items-center gap-2">
-              <Utensils className="w-3.5 h-3.5 text-[#00E5FF]" /> Exo Server
+              <Utensils className="w-3.5 h-3.5 text-[#00E5FF]" /> Restaurant Cloud
             </h3>
             <ul className="space-y-2.5 text-xs">
               <li>
-                <Link href="/restaurant-technology" className="hover:text-[#00E5FF] transition-colors">
-                  Self-Service Kiosk Systems
+                <Link href="/orderpoint" className="hover:text-[#00E5FF] transition-colors text-white font-medium flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF]" />
+                  OrderPoint POS & Kiosk
                 </Link>
               </li>
               <li>
                 <Link href="/restaurant-technology" className="hover:text-[#00E5FF] transition-colors">
-                  QR Ordering & Menu Software
+                  Exo Server Hospitality OS
+                </Link>
+              </li>
+              <li>
+                <Link href="/orderpoint#pricing" className="hover:text-[#00E5FF] transition-colors">
+                  Kiosk Pro 11&quot; Turnkey Kit
                 </Link>
               </li>
               <li>
@@ -79,8 +85,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/restaurant-technology" className="hover:text-[#00E5FF] transition-colors">
-                  Waitstaff & Sales Operations
+                <Link href="/orderpoint#calculator" className="hover:text-[#00E5FF] transition-colors">
+                  Savings vs Toast / Clover
                 </Link>
               </li>
             </ul>

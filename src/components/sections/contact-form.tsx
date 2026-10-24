@@ -5,6 +5,7 @@ import { submitLead, LeadSubmissionState } from "@/app/actions/leads";
 import { Send, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 
 const serviceOptions = [
+  "OrderPoint POS & Kiosk",
   "Restaurant Technology",
   "Software Development",
   "Business Intelligence",

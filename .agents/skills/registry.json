@@ -44,6 +44,12 @@
       "role": "Chief Marketing Officer & Direct Response Specialist",
       "triggers": ["marketing", "growth", "copy", "copywriting", "anuncio", "ads", "campana", "campaign", "landing page", "funnel", "conversion", "cro", "email marketing", "buyer persona", "gancho", "hook", "propuesta de valor", "retention"],
       "path": ".agents/skills/growth-marketing/SKILL.md"
+    },
+    {
+      "id": "seo-growth-specialist",
+      "role": "Head of SEO & Commercial Acquisition Specialist",
+      "triggers": ["seo", "posicionamiento", "google", "keywords", "palabras clave", "schema", "json-ld", "sitemap", "indexacion", "serp", "trafico", "vender mas", "adquisicion", "local seo", "florida seo"],
+      "path": ".agents/skills/seo-growth-specialist/SKILL.md"
     }
   ]
 }

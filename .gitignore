@@ -54,4 +54,5 @@ service-account*.json
 
 # Backups & Temp
 .agents.backup*
+.agents/memory/backup_*.json
 supabase/.temp/
