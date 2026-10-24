@@ -3,6 +3,7 @@ import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "@/lib/supabase/types";
 import { processLeadReplyWithAI, processLeadWithAI } from "@/lib/ai/agent";
+import { sendLeadNotificationSMS } from "@/lib/sms/send-sms";
 import { extractCleanEmailReply } from "@/lib/utils";
 
 function getSupabaseBackendClient() {
@@ -182,6 +183,18 @@ export async function POST(req: NextRequest) {
         service: newLead.service,
         message: cleanReply,
       });
+
+      // Dispatch admin SMS alert
+      try {
+        await sendLeadNotificationSMS({
+          fullName: newLead.full_name,
+          email: newLead.email,
+          service: newLead.service,
+          message: cleanReply,
+        });
+      } catch (smsErr) {
+        console.error("[EXO_SMS_WEBHOOK_ERROR]", smsErr);
+      }
 
       return NextResponse.json({
         success: true,

@@ -45,12 +45,18 @@
       "description": "Integración del Cerebro Comercial y Base de Conocimiento OrderPoint en Karen Mendoza (Precios, Hardware y Comparativa vs Toast/Clover)",
       "status": "COMPLETED",
       "verification": "Módulo orderpoint-knowledge.ts creado, prompts de IA y motor de respaldo actualizados, QA Gate PASS"
+    },
+    {
+      "id": "M08",
+      "description": "Integración del Módulo de Notificaciones SMS Instantáneas vía Twilio para Administrador en Florida (+17273072089)",
+      "status": "COMPLETED",
+      "verification": "SMS enviado con éxito a +17273072089 desde +17372324091 (status: delivered), módulo send-sms.ts integrado en leads.ts y webhook de Resend"
     }
   ],
   "in_progress": [],
   "priorities": [
-    "Subir cambios a GitHub para activación del cerebro de Karen en Vercel",
-    "Monitorear conversaciones activas de clientes en el CRM"
+    "Configurar variables TWILIO en Vercel Dashboard",
+    "Completar upgrade en Twilio Console para desbloquear texto personalizado de leads"
   ],
   "decisions": [
     {
@@ -94,6 +100,12 @@
       "date": "2026-10-24T03:07:00.000Z",
       "title": "Adopción de la Biblia de Producto OrderPoint en el Motor de Karen Mendoza",
       "impact": "Karen domina precios ($450+$99/mes y $799+$99/mes), hardware Samsung/BYOD, 0% comisiones y oferta de demo presencial en Florida"
+    },
+    {
+      "id": "DEC-008",
+      "date": "2026-10-24T04:23:00.000Z",
+      "title": "Aprovisionamiento de Twilio REST API para Alertas SMS de Leads",
+      "impact": "Notificación instantánea por SMS a +17273072089 sin dependencias externas pesadas"
     }
   ],
   "session_notes": "Ecosistema inicializado con memoria viva persistente y QA Gate activo."

@@ -3,6 +3,7 @@
 import { headers } from "next/headers";
 import { createServerClientInstance } from "@/lib/supabase/server";
 import { processLeadWithAI } from "@/lib/ai/agent";
+import { sendLeadNotificationSMS } from "@/lib/sms/send-sms";
 import { Database } from "@/lib/supabase/types";
 import { checkRateLimit } from "@/lib/security/rate-limiter";
 import { isServerAdminAuthenticated } from "@/app/actions/auth";
@@ -168,6 +169,20 @@ export async function submitLead(prevState: LeadSubmissionState | null, formData
         });
       } catch (err) {
         console.error("[EXO_AI_BG_ERROR]", err);
+      }
+
+      // 7. Dispatch instant admin SMS alert to Florida phone
+      try {
+        await sendLeadNotificationSMS({
+          fullName,
+          phone,
+          email,
+          company,
+          service,
+          message,
+        });
+      } catch (smsErr) {
+        console.error("[EXO_SMS_DISPATCH_ERROR]", smsErr);
       }
     }
 
