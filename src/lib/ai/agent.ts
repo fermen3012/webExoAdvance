@@ -6,6 +6,10 @@ import {
   sendAdminReplyNotification,
 } from "@/lib/email/send-email";
 import { isSpanishText } from "@/lib/utils";
+import {
+  ORDERPOINT_KNOWLEDGE_PROMPT_ES,
+  ORDERPOINT_KNOWLEDGE_PROMPT_EN,
+} from "./orderpoint-knowledge";
 
 export interface AIAnalysisResult {
   aiScore: number;
@@ -43,13 +47,18 @@ export async function processLeadWithAI(leadId: string, leadData: {
 
     if (apiKey) {
       try {
-        const prompt = `You are Karen Mendoza, Senior Solutions & Sales Specialist for Exo Advance LLC (https://www.exoadvancellc.com). We build custom SaaS platforms, Exo Server restaurant kiosk POS systems, and executive Business Intelligence dashboards.
+        const isEs = isSpanishText(leadData.message);
+        const orderpointContext = isEs ? ORDERPOINT_KNOWLEDGE_PROMPT_ES : ORDERPOINT_KNOWLEDGE_PROMPT_EN;
+
+        const prompt = `You are Karen Mendoza, Senior Solutions & Sales Specialist for Exo Advance LLC (https://www.exoadvancellc.com). We engineer OrderPoint (Restaurant Cloud POS & Kiosk), custom cloud software, and executive Business Intelligence dashboards.
 
 A prospective client just contacted us through our website:
 - Client Name: ${leadData.full_name}
 - Company: ${leadData.company || "N/A"}
 - Service Requested: ${leadData.service}
 - Client Message: "${leadData.message}"
+
+${orderpointContext}
 
 CRITICAL MANDATORY REQUIREMENT - LANGUAGE MATCHING:
 Detect the exact language used by the client in their message ("${leadData.message}").
@@ -61,9 +70,9 @@ NEVER reply in English if the client contacted us in Spanish.
 Your objective is to act as an attentive, consultative sales specialist who wants to understand their exact business needs and close the deal.
 Craft a warm, highly professional follow-up email that:
 1. Warmly thanks them and acknowledges their specific inquiry.
-2. Explains briefly how Exo Advance helps businesses in their industry eliminate operational chaos and boost revenue.
+2. Explains briefly how Exo Advance helps businesses in their industry eliminate operational chaos, cut commissions, and boost revenue.
 3. Asks 3 strategic qualifying questions to understand their scope, timeline, and current bottlenecks.
-4. Invites them to reply with details or set up a quick 10-minute live demo/strategy call.
+4. Invites them to reply with details or set up a quick 10-minute live demo (or on-site in Florida).
 
 Return a valid JSON object with the exact keys:
 1. "aiScore": a number from 1 to 100 based on buyer intent, budget cues, and enterprise potential.
@@ -211,13 +220,13 @@ function generateContextualFallback(leadData: {
 
   if (isSpanish) {
     if (leadData.service.includes("Restaurant")) {
-      serviceHeadline = `Exo Server OS y Kioscos Autoservicio para Restaurantes${companyMention}`;
+      serviceHeadline = `OrderPoint — Restaurant Cloud POS & Kiosk${companyMention}`;
       serviceValueProp =
-        "Nuestro sistema operativo especializado para restaurantes está diseñado para eliminar filas en caja, agilizar la rotación de mesas y elevar el ticket promedio con pantallas táctiles de autoservicio y comandas digitales QR.";
-      followUpQuestions = `Para que nuestro equipo prepare una propuesta personalizada y una demo en vivo adaptada a su operación, ¿podría compartirnos algunos detalles rápidos:
-1. ¿Qué sistema POS o de comandas utilizan actualmente (o están evaluando)?
-2. ¿Cuántas sucursales o terminales/kioscos táctiles tienen proyectado equipar?
-3. ¿Cuál es su fecha objetivo de implementación, y le gustaría ver una demostración en vivo de 10 minutos de los kioscos en funcionamiento?`;
+        "OrderPoint conecta tu sala y tu cocina en tiempo real sin contratos forzosos y con 0% de comisiones por pedido. Ofrecemos el Módulo Salón & Cocina con $0 en hardware ($450 setup + $99/mes) donde tus meseros usan sus propios teléfonos (iOS/Android), y el Kiosko de Autoservicio Pro 11\" llave en mano ($799 + $99/mes) que incrementa el ticket promedio en +22% con venta sugerida automática.";
+      followUpQuestions = `Para prepararte una propuesta exacta y agendar una demo de 10 minutos (incluso en tu propio restaurante si estás en Florida):
+1. ¿Tu restaurante opera con servicio a la mesa con meseros, atención rápida en mostrador, o un modelo mixto?
+2. ¿Cuántas mesas o sucursales tienen proyectado equipar?
+3. ¿Qué sistema utilizan actualmente (Toast, Clover, Square, papel), y cuándo les gustaría comenzar?`;
     } else if (leadData.service.includes("Software")) {
       serviceHeadline = `Desarrollo de Software a la Medida y Plataformas Web${companyMention}`;
       serviceValueProp =
@@ -503,32 +512,35 @@ function generateConversationalFallback(params: ProcessReplyParams): string {
     ) {
       return `Hola ${name},
 
-¡Excelente! En Exo Advance nos especializamos justamente en tecnología para restaurantes y aplicaciones de pedidos digitales.
+¡Excelente! En Exo Advance desarrollamos OrderPoint (Restaurant Cloud POS & Kiosk), diseñado específicamente para conectar tu sala y tu cocina en tiempo real, con 0% de comisiones por pedido y sin contratos forzosos.
 
-Para restaurantes desarrollamos dos tipos de soluciones que pueden operar de forma integrada o independiente según tus necesidades:
+Para tu restaurante tenemos dos soluciones oficiales listas para operar:
 
-1. Aplicación de Pedidos y Delivery Propio (iOS, Android y Web):
-   - Tus clientes ordenan directo desde su teléfono escaneando un código QR en mesa o desde casa para delivery/takeout.
-   - Sin pagar el 25%-30% de comisión a plataformas de terceros como DoorDash o UberEats.
-   - Pasarela de cobros segura integrada con depósito directo a tu cuenta bancaria.
+1. Módulo Salón & Cocina (Exo Server) — $450 Setup Único + $99/mes de Software:
+   • Modelo BYOD ($0 en Hardware): Tus meseros usan sus propios teléfonos (iPhone o Android) para tomar pedidos en mesa.
+   • Pantalla de Cocina (KDS) en Vivo: Sincronizada en milisegundos con alertas visuales de comandas.
+   • Mapeo de Mesas Interactivo: Monitoreo de comandas activas y total acumulado por mesa.
+   • Notas Rápidas de Comanda ("Sin Cebolla", "Término Medio", "Salsa Aparte").
+   • Digitalización 100% de tu Menú y capacitación presencial/en vivo a tu equipo.
 
-2. Exo Server Restaurant OS (Punto de Venta y Kioscos Táctiles):
-   - Kioscos de autoservicio para caja que eliminan filas y aumentan el ticket promedio en +$4.20.
-   - Pantalla digital de cocina (KDS) para que los pedidos lleguen al chef en tiempo real sin papel.
-   - Panel administrativo para control de stock de insumos, recetas y reportes de ventas diarias.
+2. Kiosko de Autoservicio Pro 11" — $799 Kit Completo Llave en Mano + $99/mes de Software:
+   • Estación táctil que toma pedidos y cobra en mostrador.
+   • Venta Sugerida Automática: Incrementa el ticket promedio en +22% al ofrecer extras y bebidas automáticamente.
+   • Hardware Industrial incluido (100% tuyo sin rentas): Tablet Samsung Galaxy Tab A9+ 11" HD (resistente a jornadas continuas de 12h), soporte metálico antirrobo blindado de acero con cerradura de llave para mostrador, e impresora térmica 80mm de alto flujo con auto-corte y Bluetooth.
+   • Envío directo a pantalla KDS o comanda impresa.
+   • (Si ya cuentas con tu propia tablet, opción BYOD disponible por solo $150 de setup).
 
-Para recomendarte la mejor arquitectura y darte un presupuesto exacto:
-1. ¿Tu restaurante opera principalmente con servicio en mesa, para llevar (delivery/pickup), o un modelo mixto?
-2. ¿Actualmente ya cuentas con una sucursal en marcha, o estás en fase de planificación y apertura?
+¿Necesitas pantallas extra? Solo se cobra el costo de hardware + $10.99/mes por pantalla adicional, sin cargos ocultos ni terminales caras como Toast o Clover (que cobran de $1,400 a $2,200 por terminal).
 
-Si lo deseas, con mucho gusto podemos coordinar una breve llamada de 10 minutos para mostrarte una demostración en vivo de la app en acción. ¿Qué día y horario te quedaría mejor?
+¿Tu restaurante opera principalmente con meseros en mesa, mostrador rápido, o ambos?
+Si estás en Florida, podemos ir directamente a tu restaurante y mostrarte el sistema funcionando en tus propias mesas o mostrador en una demostración en vivo de 10 minutos. ¿Qué día y horario te convendría?
 
 Saludos cordiales,
 
 Karen Mendoza
 Senior Solutions & Sales Specialist
 Exo Advance LLC — Soluciones a la medida de tu negocio
-Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
+Tel: (727) 307-2089 | Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
     }
 
     // Topic: Pricing / Presupuesto / Cuánto cuesta
@@ -542,26 +554,26 @@ Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
     ) {
       return `Hola ${name},
 
-Con mucho gusto te oriento sobre la inversión y esquemas de presupuesto para tu proyecto.
+Con mucho gusto te comparto con total transparencia nuestros precios oficiales, siempre con 0% de comisiones por pedido y sin contratos forzosos ni letras pequeñas:
 
-En Exo Advance estructuramos las soluciones con dos modalidades para que elijas la más conveniente para tu negocio:
+1. Para Restaurantes (OrderPoint Cloud POS & Kiosk):
+   • Módulo Salón & Cocina (Servicio a la mesa): $450 Setup e instalación única + $99/mes de software. Hardware $0 (tus meseros usan sus propios teléfonos iPhone o Android con pantalla de cocina KDS en vivo).
+   • Kiosko de Autoservicio Pro 11" (Mostrador): $799 Kit Llave en Mano Completo + $99/mes de software. Incluye tablet Samsung Galaxy Tab A9+ 11", soporte metálico antirrobo blindado con llave e impresora térmica 80mm con auto-corte. (O solo $150 setup si ya tienes tu propia tablet).
+   • Pantallas o Kioskos adicionales: Solo costo del hardware + $10.99/mes por pantalla extra.
 
-1. Modelo SaaS Mensual (Llave en Mano):
-   - Inversión inicial accesible que incluye infraestructura cloud, servidores de alto rendimiento, mantenimiento preventivo y soporte técnico continuo.
-2. Desarrollo a la Medida (Código Propietario):
-   - Inversión por etapas de desarrollo con entrega de propiedad total del código fuente y personalización al 100%.
+2. Para Plataformas Web y Software a la Medida:
+   • Planes SaaS mensuales llave en mano (desde $99/mes) o desarrollo por etapas con código propietario y entrega de propiedad total.
 
-Para prepararte una propuesta formal y cerrada sin sobrecostos:
-¿Cuáles son las 2 o 3 funciones indispensables que debe tener el sistema en tu primera versión?
+A diferencia de Clover o Toast que te cobran entre $1,400 y $2,200 por terminal obligatoria y te atan con contratos de permanencia, con nosotros el software es mes a mes y el hardware es tuyo.
 
-Si tienes 10 minutos disponibles hoy o mañana, podemos tener una llamada rápida para definir el alcance exacto y prepararte la cotización formal de inmediato. ¿Qué horario te queda bien?
+¿Te gustaría que agendemos una demostración en vivo de 10 minutos (en tu propio restaurante si estás en Florida, o por videollamada) para que veas el sistema en funcionamiento antes de tomar una decisión?
 
 Saludos cordiales,
 
 Karen Mendoza
 Senior Solutions & Sales Specialist
 Exo Advance LLC — Soluciones a la medida de tu negocio
-Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
+Tel: (727) 307-2089 | Email: contact@exoadvancellc.com | Web: https://www.exoadvancellc.com`;
     }
 
     // Default conversational reply in Spanish
