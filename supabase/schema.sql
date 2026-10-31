@@ -128,3 +128,40 @@ CREATE POLICY "Allow service_role full access to interactions"
   TO service_role
   USING (true)
   WITH CHECK (true);
+
+-- 3. MERCHANT INTEGRATIONS TABLE (OrderPoint Hub: Clover, Square, Toast, Standalone)
+CREATE TABLE IF NOT EXISTS public.merchant_integrations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  restaurant_id UUID NOT NULL REFERENCES public.restaurants(id) ON DELETE CASCADE,
+  provider TEXT NOT NULL, -- 'clover' | 'square' | 'toast' | 'standalone'
+  status TEXT NOT NULL DEFAULT 'active', -- 'active' | 'disconnected' | 'error'
+  encrypted_credentials TEXT NOT NULL, -- AES-256-GCM ciphertext:iv:authTag
+  merchant_account_id TEXT, -- External Merchant ID (Clover merchantId, Square locationId, Toast restaurantGuid)
+  settings JSONB NOT NULL DEFAULT '{"auto_inject": true, "print_ticket": true, "fallback_to_kds": true}'::jsonb,
+  last_synced_at TIMESTAMPTZ,
+  last_error TEXT,
+  CONSTRAINT unique_restaurant_provider UNIQUE (restaurant_id, provider)
+);
+
+-- Ensure orders table has integration tracking columns
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS external_order_id TEXT;
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS external_pos_provider TEXT DEFAULT 'standalone';
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS external_sync_status TEXT DEFAULT 'synced';
+ALTER TABLE public.orders ADD COLUMN IF NOT EXISTS external_sync_error TEXT;
+
+-- Enable Row Level Security
+ALTER TABLE public.merchant_integrations ENABLE ROW LEVEL SECURITY;
+
+-- Clean up legacy or conflicting policies
+DROP POLICY IF EXISTS "Allow service_role full access to merchant_integrations" ON public.merchant_integrations;
+
+-- [HARDENING SEC-02] Restrict merchant_integrations access exclusively to server backend (service_role)
+CREATE POLICY "Allow service_role full access to merchant_integrations"
+  ON public.merchant_integrations
+  FOR ALL
+  TO service_role
+  USING (true)
+  WITH CHECK (true);
+
