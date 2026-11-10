@@ -75,6 +75,12 @@
       "description": "Fase 1 del Hub de Integración POS (Cimientos, Cifrado AES-256-GCM y Contratos Desacoplados)",
       "status": "COMPLETED",
       "verification": "Script SQL en supabase/schema.sql, módulo de cifrado encryption.ts, tipos e interfaz IPOSAdapter, StandaloneAdapter y POSBridgeRouter con guardia de timeout de 3.5s y QA Gate PASS"
+    },
+    {
+      "id": "M13",
+      "description": "Unificación de EXO SALE Outbound en el Centro de Mando (Migración Supabase y Bandeja Human-in-the-Loop en /admin)",
+      "status": "COMPLETED",
+      "verification": "Migración 20261110_exo_sale_outbound.sql, Server Actions outbound.ts, dispatch Resend sendOutboundColdEmail, componente OutboundProspectsTab con pre-send gate y pestaña activa en CRM dashboard"
     }
   ],
   "in_progress": [],

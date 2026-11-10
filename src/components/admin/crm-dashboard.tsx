@@ -4,7 +4,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { fetchCRMLeads, LeadWithInteractions } from "@/app/actions/leads";
 import { LeadDetailModal } from "./lead-detail-modal";
 import { ServicesCatalogTab } from "./services-catalog-tab";
-import { Search, RefreshCw, Users, Sparkles, CheckCircle2, TrendingUp, Filter, MessageSquare, ArrowUpRight, ShieldCheck, LogOut, ChevronRight, Mail, Phone, Calendar, Briefcase } from "lucide-react";
+import { OutboundProspectsTab } from "./outbound-prospects-tab";
+import { Search, RefreshCw, Users, Sparkles, CheckCircle2, TrendingUp, Filter, MessageSquare, ArrowUpRight, ShieldCheck, LogOut, ChevronRight, Mail, Phone, Calendar, Briefcase, Zap } from "lucide-react";
 import { useAdminAuth } from "./admin-auth-guard";
 
 interface CRMDashboardProps {
@@ -15,7 +16,7 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
   const { onLogout: contextOnLogout } = useAdminAuth();
   const handleLogout = propOnLogout || contextOnLogout;
 
-  const [activeTab, setActiveTab] = useState<"leads" | "services">("leads");
+  const [activeTab, setActiveTab] = useState<"leads" | "services" | "outbound">("leads");
   const [leads, setLeads] = useState<LeadWithInteractions[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -132,6 +133,21 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
           >
             <Briefcase className={`w-4 h-4 ${activeTab === "services" ? "text-[#00E5FF]" : "text-slate-400"}`} />
             <span>Services & Product Catalog</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab("outbound")}
+            className={`px-5 py-3 rounded-2xl font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2.5 transition-all cursor-pointer border ${
+              activeTab === "outbound"
+                ? "bg-[#1E3A8A] border-[#00E5FF] text-white shadow-[0_0_20px_rgba(0,229,255,0.25)]"
+                : "bg-[#0A0F1A]/80 border-white/10 text-slate-400 hover:text-white hover:border-white/20"
+            }`}
+          >
+            <Sparkles className={`w-4 h-4 ${activeTab === "outbound" ? "text-[#00E5FF]" : "text-slate-400"}`} />
+            <span>Outbound AI (EXO SALE)</span>
+            <span className="text-[9px] font-mono font-bold bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40 px-1.5 py-0.5 rounded uppercase">
+              HITL
+            </span>
           </button>
         </div>
 
@@ -446,6 +462,11 @@ export function CRMDashboard({ onLogout: propOnLogout }: CRMDashboardProps) {
         {/* Tab 2: Services & Products Catalog */}
         {activeTab === "services" && (
           <ServicesCatalogTab />
+        )}
+
+        {/* Tab 3: Outbound Prospeting Engine (EXO SALE) */}
+        {activeTab === "outbound" && (
+          <OutboundProspectsTab />
         )}
 
       </div>
