@@ -68,7 +68,12 @@ export function OrderpointComparison() {
         </p>
       </div>
 
-      <div className="overflow-x-auto pb-4">
+      <div className="flex sm:hidden items-center justify-end gap-1.5 text-[11px] font-mono text-[#00E5FF] mb-2 px-1">
+        <span>Desliza para comparar</span>
+        <span>👉</span>
+      </div>
+
+      <div className="overflow-x-auto pb-4 -mx-4 sm:mx-0 px-4 sm:px-0">
         <table className="w-full min-w-[760px] text-left border-collapse">
           <thead>
             <tr className="border-b border-white/10">

@@ -7,6 +7,7 @@ import {
   regenerateOutboundAngle,
   OutboundReviewItem,
 } from "@/app/actions/outbound";
+import { LocalSEOAuditModal } from "./local-seo-audit-modal";
 import {
   Sparkles,
   Search,
@@ -27,6 +28,7 @@ import {
   DollarSign,
   Loader2,
   Check,
+  MapPin,
 } from "lucide-react";
 
 export function OutboundProspectsTab() {
@@ -35,6 +37,10 @@ export function OutboundProspectsTab() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTier, setSelectedTier] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
+
+  // Local SEO Audit Modal State
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+  const [auditTargetName, setAuditTargetName] = useState("");
 
   // Human-in-the-Loop Modal State
   const [reviewingItem, setReviewingItem] = useState<OutboundReviewItem | null>(null);
@@ -233,6 +239,20 @@ export function OutboundProspectsTab() {
             <option value="SENT">Sent</option>
             <option value="DISCARDED">Discarded</option>
           </select>
+
+          {/* Lead Magnet Auditor Button */}
+          <button
+            type="button"
+            onClick={() => {
+              setAuditTargetName("");
+              setIsAuditModalOpen(true);
+            }}
+            className="bg-[#1E3A8A] hover:bg-[#1E3A8A]/80 border border-[#00E5FF] text-white px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(0,229,255,0.25)] shrink-0 cursor-pointer"
+          >
+            <MapPin className="w-3.5 h-3.5 text-[#00E5FF]" />
+            <span className="hidden sm:inline">Auditoría Google Maps</span>
+            <span className="sm:hidden">Auditoría Maps</span>
+          </button>
         </div>
       </div>
 
@@ -364,6 +384,17 @@ export function OutboundProspectsTab() {
                   </button>
                 ) : (
                   <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuditTargetName(item.companyName);
+                        setIsAuditModalOpen(true);
+                      }}
+                      className="p-2.5 rounded-xl bg-[#1E3A8A]/30 hover:bg-[#1E3A8A]/70 border border-[#00E5FF]/30 hover:border-[#00E5FF] text-[#00E5FF] transition-all"
+                      title="Generar Auditoría Google Maps"
+                    >
+                      <MapPin className="w-3.5 h-3.5" />
+                    </button>
                     <button
                       onClick={() => openReviewModal(item)}
                       className="bg-[#00E5FF] hover:bg-[#00E5FF]/90 text-black px-4 py-2.5 rounded-xl text-xs font-mono font-black flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(0,229,255,0.3)] active:scale-95"
@@ -555,6 +586,13 @@ export function OutboundProspectsTab() {
           </div>
         </div>
       )}
+
+      {/* LOCAL SEO / GOOGLE MAPS AUDIT LEAD MAGNET MODAL */}
+      <LocalSEOAuditModal
+        isOpen={isAuditModalOpen}
+        onClose={() => setIsAuditModalOpen(false)}
+        defaultRestaurantName={auditTargetName}
+      />
     </div>
   );
 }

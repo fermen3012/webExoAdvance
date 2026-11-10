@@ -48,8 +48,14 @@
     {
       "id": "seo-growth-specialist",
       "role": "Head of SEO & Commercial Acquisition Specialist",
-      "triggers": ["seo", "posicionamiento", "google", "keywords", "palabras clave", "schema", "json-ld", "sitemap", "indexacion", "serp", "trafico", "vender mas", "adquisicion", "local seo", "florida seo"],
+      "triggers": ["seo", "posicionamiento", "google", "keywords", "palabras clave", "schema", "json-ld", "sitemap", "indexacion", "serp", "trafico", "vender mas", "adquisicion", "florida seo"],
       "path": ".agents/skills/seo-growth-specialist/SKILL.md"
+    },
+    {
+      "id": "local-seo",
+      "role": "Local SEO & Google Maps Acquisition Specialist",
+      "triggers": ["local seo", "google maps", "local pack", "maps", "auditoria maps", "auditar restaurante", "resenas", "google business", "gbp"],
+      "path": ".agents/skills/local-seo/SKILL.md"
     }
   ]
 }
