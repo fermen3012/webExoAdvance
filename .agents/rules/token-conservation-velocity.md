@@ -32,10 +32,11 @@ To maximize development velocity, eliminate context saturation, and reduce token
   ```
   It validates type-checking, secret prevention, and memory integrity in a single execution with minimal log output.
 
-## 6. Scoped Subagent Delegation
+## 6. Scoped Subagent Delegation & Tactical Selective Fusion
 - For exploratory codebase analysis or extensive refactor planning, invoke a subagent with a restricted prompt rather than pulling entire directories into the parent context.
+- **Tactical Selective Fusion (Complex Bottlenecks Only):** When evaluating competing subagent candidates in isolated sandboxes, forensically inspect their diffs, extract complementary strengths (e.g., structural cleanliness from Candidate A + execution speed from Candidate B), and discard their respective weaknesses.
 
-## 7. Anti-Amnesia State Ledger (Session Continuity)
+## 7. Anti-Amnesia State Ledger & Deterministic Memory Gate
 - Never start complex tasks without inspecting `.agents/memory/state.json` (~150 tokens) to retrieve historical milestones and recent architectural decisions.
-- Never conclude tasks without recording milestone completion and new technical decisions in `.agents/memory/state.json`.
-- This guarantees zero cognitive amnesia across sessions while saving tens of thousands of redundant analysis tokens.
+- **Deterministic Memory Gate:** Strictly prohibit injecting new milestones, optimizations, or rules into permanent memory (`.agents/memory/`) unless `node .agents/bin/verify.js` passes (`PASS`) with data structures and output schemas intact.
+- Once verified, record milestone completion and new technical decisions in `.agents/memory/state.json` to guarantee zero cognitive amnesia across sessions.

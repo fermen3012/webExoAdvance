@@ -12,7 +12,10 @@ const results = {
   memoryIntegrity: { name: 'Memoria & Invariantes', pass: false, details: '' },
   secretAudit: { name: 'Auditoría InfoSec (Cero Secretos Expuestos)', pass: false, details: '' },
   typeCheck: { name: 'QA Gate & Comprobación de Tipos', pass: false, details: '' },
-  skeletonSync: { name: 'Sincronización del Esqueleto AST', pass: false, details: '' }
+  cloudCostGuard: { name: 'Escudo Anti-Facturas Cloud & Patrones N+1', pass: false, details: '' },
+  skeletonSync: { name: 'Sincronización del Esqueleto AST', pass: false, details: '' },
+  i18nGuard: { name: 'Gobernanza English-First & Paridad Bilingüe i18n (Regla 10)', pass: false, details: '' },
+  adversarialPbtGuard: { name: 'Blindaje Adversarial & Invariantes PBT (Regla 11)', pass: false, details: '' }
 };
 
 // 1. Verificación de Integridad de Memoria
@@ -21,6 +24,7 @@ function checkMemory() {
     path.join(MEMORY_DIR, 'invariants.json'),
     path.join(MEMORY_DIR, 'graph.json'),
     path.join(MEMORY_DIR, 'state.json'),
+    path.join(MEMORY_DIR, 'antidotes.json'),
     path.join(SKILLS_DIR, 'registry.json')
   ];
 
@@ -38,7 +42,7 @@ function checkMemory() {
   }
 
   results.memoryIntegrity.pass = true;
-  results.memoryIntegrity.details = '4 archivos de memoria y registro validados correctamente.';
+  results.memoryIntegrity.details = '5 archivos de memoria (incluyendo antidotes.json) y registro validados.';
 }
 
 // 2. Auditoría InfoSec y Prevención de Fuga de Secretos
@@ -169,7 +173,59 @@ function checkTypes() {
   }
 }
 
-// 4. Verificación de Sincronización del Esqueleto
+// 4. Escudo Anti-Facturas Cloud & Patrones Mortales (N+1 Queries & Loops Infinitos)
+function checkCloudCostPatterns() {
+  const codeFiles = [];
+  const ignoredDirs = new Set(['node_modules', '.git', '.next', 'dist', 'build', '.agents']);
+
+  function collect(dir) {
+    if (!fs.existsSync(dir)) return;
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isSymbolicLink && entry.isSymbolicLink()) continue;
+      if (entry.isDirectory()) {
+        if (!ignoredDirs.has(entry.name) && !entry.name.startsWith('.')) {
+          collect(path.join(dir, entry.name));
+        }
+      } else if (entry.isFile()) {
+        const ext = path.extname(entry.name).toLowerCase();
+        if (['.ts', '.tsx', '.js', '.jsx'].includes(ext)) {
+          const full = path.join(dir, entry.name);
+          try {
+            if (fs.statSync(full).size <= 1024 * 1024) codeFiles.push(full);
+          } catch (e) {}
+        }
+      }
+    }
+  }
+
+  collect(PROJECT_ROOT);
+
+  // Patrón 1: Consultas a DB dentro de bucles for/while (Problema N+1 que dispara costos en Supabase/Postgres)
+  const nPlusOneRegex = /\b(?:for|while)\s*\([^)]*\)\s*\{[^}]{0,400}\bawait\s+(?:supabase\.from|prisma\.[a-zA-Z]+|db\.query)\s*\(/s;
+  // Patrón 2: useEffect con llamadas a red/DB sin array de dependencias (Loop infinito de lecturas en producción)
+  const infiniteEffectRegex = /useEffect\s*\(\s*(?:async\s*)?\(\)\s*=>\s*\{[^}]{0,600}(?:fetch\(|supabase\.from\()[^}]*\}\s*\)/s;
+
+  for (const file of codeFiles) {
+    try {
+      const content = fs.readFileSync(file, 'utf8');
+      const rel = path.relative(PROJECT_ROOT, file).replace(/\\/g, '/');
+      if (nPlusOneRegex.test(content)) {
+        results.cloudCostGuard.details = `Riesgo N+1 detectado (consulta DB dentro de bucle) en: ${rel}`;
+        return;
+      }
+      if (infiniteEffectRegex.test(content)) {
+        results.cloudCostGuard.details = `Bucle infinito potencial (useEffect con fetch/DB sin array de dependencias) en: ${rel}`;
+        return;
+      }
+    } catch (e) {}
+  }
+
+  results.cloudCostGuard.pass = true;
+  results.cloudCostGuard.details = `${codeFiles.length} archivos verificados libres de consultas N+1 en bucles y efectos infinitos.`;
+}
+
+// 5. Verificación de Sincronización del Esqueleto
 function checkSkeleton() {
   const skeletonPath = path.join(MEMORY_DIR, 'skeleton.compact');
   if (!fs.existsSync(skeletonPath)) {
@@ -187,6 +243,153 @@ function checkSkeleton() {
   results.skeletonSync.details = `Esqueleto activo y sincronizado (${(stat.size / 1024).toFixed(2)} KB).`;
 }
 
+// 6. Verificación de Gobernanza English-First & Paridad Bilingüe (Regla 10)
+function checkEnglishFirstAndI18n() {
+  const ignoreDirs = new Set(['node_modules', '.git', '.agents', 'dist', 'build', '.next', '.vercel']);
+  const codeFiles = [];
+
+  function collect(dir) {
+    if (!fs.existsSync(dir)) return;
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const ent of entries) {
+      if (ent.isDirectory()) {
+        if (!ignoreDirs.has(ent.name) && !ent.name.startsWith('.agents.backup') && !ent.name.startsWith('.')) {
+          collect(path.join(dir, ent.name));
+        }
+      } else if (ent.isFile() && /\.(tsx|jsx|ts|js|py|sql)$/.test(ent.name)) {
+        codeFiles.push(path.join(dir, ent.name));
+      }
+    }
+  }
+  collect(PROJECT_ROOT);
+
+  // A. Comprobar que el arranque de idioma por defecto NO esté forzado a español ('es')
+  // Patrones: useState('es'), useState<Locale>('es'), defaultLocale: 'es', initialLocale: 'es'
+  const spanishDefaultLocaleRegex = /\b(?:useState\s*(?:<[^>]*>)?\s*\(\s*['"]es['"]\s*\)|defaultLocale\s*:\s*['"]es['"]|initialLocale\s*:\s*['"]es['"])/;
+
+  for (const file of codeFiles) {
+    try {
+      const content = fs.readFileSync(file, 'utf8');
+      const rel = path.relative(PROJECT_ROOT, file).replace(/\\/g, '/');
+      if (spanishDefaultLocaleRegex.test(content)) {
+        results.i18nGuard.details = `Violación Regla 10: Arranque por defecto configurado en español ('es') en: ${rel}. Por arquitectura English-First, el runtime debe arrancar en 'en' por defecto.`;
+        return;
+      }
+    } catch (e) {}
+  }
+
+  // B. Comprobar paridad de claves en carpetas locales o i18n
+  const possibleLocalesDirs = [
+    path.join(PROJECT_ROOT, 'locales'),
+    path.join(PROJECT_ROOT, 'src', 'locales'),
+    path.join(PROJECT_ROOT, 'public', 'locales')
+  ];
+
+  for (const locDir of possibleLocalesDirs) {
+    const enFile = path.join(locDir, 'en.json');
+    const esFile = path.join(locDir, 'es.json');
+    if (fs.existsSync(enFile) && fs.existsSync(esFile)) {
+      try {
+        const enObj = JSON.parse(fs.readFileSync(enFile, 'utf8'));
+        const esObj = JSON.parse(fs.readFileSync(esFile, 'utf8'));
+
+        function getLeafKeys(obj, prefix = '') {
+          let keys = [];
+          for (const k of Object.keys(obj)) {
+            const fullKey = prefix ? `${prefix}.${k}` : k;
+            if (obj[k] && typeof obj[k] === 'object' && !Array.isArray(obj[k])) {
+              keys = keys.concat(getLeafKeys(obj[k], fullKey));
+            } else {
+              keys.push(fullKey);
+            }
+          }
+          return keys;
+        }
+
+        const enKeys = new Set(getLeafKeys(enObj));
+        const esKeys = new Set(getLeafKeys(esObj));
+
+        const missingInEs = [...enKeys].filter(k => !esKeys.has(k));
+        const missingInEn = [...esKeys].filter(k => !enKeys.has(k));
+
+        if (missingInEs.length > 0) {
+          results.i18nGuard.details = `Falta paridad bilingüe: ${missingInEs.length} clave(s) en en.json faltan en es.json (ej: ${missingInEs[0]})`;
+          return;
+        }
+        if (missingInEn.length > 0) {
+          results.i18nGuard.details = `Falta paridad bilingüe: ${missingInEn.length} clave(s) en es.json faltan en en.json (ej: ${missingInEn[0]})`;
+          return;
+        }
+      } catch (e) {
+        results.i18nGuard.details = `Error parseando archivos de idiomas en ${path.relative(PROJECT_ROOT, locDir)}: ${e.message}`;
+        return;
+      }
+    }
+  }
+
+  results.i18nGuard.pass = true;
+  results.i18nGuard.details = 'Arranque en inglés verificado y paridad bilingüe i18n sincronizada.';
+}
+
+// 7. Verificación de Blindaje Adversarial & Invariantes PBT (Regla 11)
+function checkAdversarialPbt() {
+  const ignoreDirs = new Set(['node_modules', '.git', '.agents', 'dist', 'build', '.next', '.vercel']);
+  const pbtFiles = [];
+  const criticalModules = [];
+
+  function collect(dir) {
+    if (!fs.existsSync(dir)) return;
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    for (const ent of entries) {
+      if (ent.isDirectory()) {
+        if (!ignoreDirs.has(ent.name) && !ent.name.startsWith('.agents.backup') && !ent.name.startsWith('.')) {
+          collect(path.join(dir, ent.name));
+        }
+      } else if (ent.isFile()) {
+        const lowerName = ent.name.toLowerCase();
+        if (/\.(property|pbt)\.test\.(ts|tsx|js|jsx)$/.test(lowerName)) {
+          pbtFiles.push(path.join(dir, ent.name));
+        } else if (/\.(ts|tsx|js|jsx)$/.test(lowerName) && !lowerName.includes('.test.') && !lowerName.includes('.spec.')) {
+          if (/billing|checkout|payment|pricing|stripe|ledger|balance|tax-calc/i.test(lowerName)) {
+            criticalModules.push(path.join(dir, ent.name));
+          }
+        }
+      }
+    }
+  }
+  collect(PROJECT_ROOT);
+
+  if (pbtFiles.length > 0) {
+    for (const file of pbtFiles) {
+      try {
+        const content = fs.readFileSync(file, 'utf8');
+        const rel = path.relative(PROJECT_ROOT, file).replace(/\\/g, '/');
+        if (!content.includes('fast-check') && !content.includes('fc.') && !content.includes("from 'fast-check'")) {
+          results.adversarialPbtGuard.details = `Suite PBT inválida en ${rel}: debe utilizar el motor 'fast-check'.`;
+          return;
+        }
+        if (!content.includes('assert') && !content.includes('property')) {
+          results.adversarialPbtGuard.details = `Suite PBT sin aserciones de propiedad en ${rel}.`;
+          return;
+        }
+      } catch (e) {}
+    }
+    results.adversarialPbtGuard.pass = true;
+    results.adversarialPbtGuard.details = `${pbtFiles.length} suite(s) PBT validadas con fast-check (invariantes y aserciones conformes).`;
+    return;
+  }
+
+  if (criticalModules.length > 0) {
+    const relCritical = path.relative(PROJECT_ROOT, criticalModules[0]).replace(/\\/g, '/');
+    results.adversarialPbtGuard.pass = true;
+    results.adversarialPbtGuard.details = `⚠️ Módulo financiero detectado (${relCritical}). Se recomienda convocar a red-team-breaker para blindaje PBT.`;
+    return;
+  }
+
+  results.adversarialPbtGuard.pass = true;
+  results.adversarialPbtGuard.details = 'Sin módulos financieros/pagos pendientes de PBT. Scope en orden.';
+}
+
 function main() {
   console.log('\n======================================================');
   console.log('🛡️ Verificador de Invariantes & QA Gate (AGENTS.md)');
@@ -196,7 +399,10 @@ function main() {
   checkMemory();
   checkSecrets();
   checkTypes();
+  checkCloudCostPatterns();
   checkSkeleton();
+  checkEnglishFirstAndI18n();
+  checkAdversarialPbt();
 
   let allPassed = true;
 

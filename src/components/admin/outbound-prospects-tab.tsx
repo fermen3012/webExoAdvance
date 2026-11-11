@@ -29,6 +29,8 @@ import {
   Loader2,
   Check,
   MapPin,
+  Phone,
+  Navigation,
 } from "lucide-react";
 
 export function OutboundProspectsTab() {
@@ -37,6 +39,7 @@ export function OutboundProspectsTab() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTier, setSelectedTier] = useState<string>("all");
   const [selectedStatus, setSelectedStatus] = useState<string>("all");
+  const [selectedCounty, setSelectedCounty] = useState<string>("all");
 
   // Local SEO Audit Modal State
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
@@ -147,8 +150,9 @@ export function OutboundProspectsTab() {
 
     const matchesTier = selectedTier === "all" || p.priorityTier === selectedTier;
     const matchesStatus = selectedStatus === "all" || p.status === selectedStatus;
+    const matchesCounty = selectedCounty === "all" || (p.county && p.county.toLowerCase() === selectedCounty.toLowerCase());
 
-    return matchesSearch && matchesTier && matchesStatus;
+    return matchesSearch && matchesTier && matchesStatus && matchesCounty;
   });
 
   // Metrics
@@ -212,7 +216,19 @@ export function OutboundProspectsTab() {
           />
         </div>
 
-        <div className="flex items-center gap-3 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+          {/* County Filter */}
+          <select
+            value={selectedCounty}
+            onChange={(e) => setSelectedCounty(e.target.value)}
+            className="bg-[#0A0F1A] border border-[#00E5FF]/30 rounded-xl px-3 py-2 text-xs text-[#00E5FF] font-mono focus:outline-none focus:border-[#00E5FF] w-full sm:w-auto"
+          >
+            <option value="all">📍 All Counties (Florida)</option>
+            <option value="Hillsborough">Hillsborough (Tampa)</option>
+            <option value="Pinellas">Pinellas (St. Pete / Clearwater)</option>
+            <option value="Pasco">Pasco (Wesley Chapel)</option>
+          </select>
+
           {/* Priority Tier Filter */}
           <div className="flex items-center gap-2 w-1/2 sm:w-auto">
             <Filter className="w-3.5 h-3.5 text-slate-500 shrink-0" />
@@ -310,11 +326,41 @@ export function OutboundProspectsTab() {
                   )}
                 </div>
 
-                <div className="flex items-center gap-3 text-xs text-slate-400 font-mono">
-                  <span>{item.contactName} ({item.contactRole})</span>
-                  <span>•</span>
-                  <span className="text-[#00E5FF]">{item.recipientEmail}</span>
+                <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400 font-mono">
+                  {item.county && item.city && (
+                    <span className="text-[10px] bg-[#1E3A8A]/50 text-[#00E5FF] border border-[#00E5FF]/30 px-2 py-0.5 rounded font-bold">
+                      {item.county} • {item.city}
+                    </span>
+                  )}
+                  {item.phone && (
+                    <a
+                      href={`tel:${item.phone.replace(/[^0-9+]/g, "")}`}
+                      className="inline-flex items-center gap-1 text-emerald-400 hover:text-emerald-300 transition-colors font-bold"
+                      title="Llamar directamente a este local"
+                    >
+                      <Phone className="w-3 h-3" />
+                      <span>{item.phone}</span>
+                    </a>
+                  )}
+                  {item.recipientEmail && (
+                    <span className="text-slate-400">• {item.recipientEmail}</span>
+                  )}
                 </div>
+
+                {item.address && (
+                  <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-mono">
+                    <Navigation className="w-3 h-3 text-[#00E5FF] shrink-0" />
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${item.companyName} ${item.address}`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-white underline decoration-slate-600 transition-colors truncate"
+                      title="Abrir ubicación en Google Maps"
+                    >
+                      {item.address}
+                    </a>
+                  </div>
+                )}
 
                 {/* Grounded Signals Badges */}
                 <div className="flex flex-wrap items-center gap-1.5 pt-1">

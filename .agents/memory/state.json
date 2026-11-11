@@ -1,7 +1,7 @@
 {
   "project": "website-exoadvance",
   "domain": "Plataforma website exoadvance",
-  "updated_at": "2026-10-24T00:33:30.000Z",
+  "updated_at": "2026-11-11T09:55:41.563Z",
   "active_version": "1.2.0",
   "milestones": [
     {
@@ -87,11 +87,17 @@
       "description": "Integración de Protocolo IndexNow e Implementación del Lead Magnet de Auditoría Google Maps & Local SEO",
       "status": "COMPLETED",
       "verification": "Endpoint /api/seo/indexnow con keyfile público, Server Action generateLocalSEOAudit, Modal interactivo con copys de 1 clic para WhatsApp/Email y registro de skill local-seo en .agents/skills/registry.json"
+    },
+    {
+      "id": "M15",
+      "description": "Actualización Segura de Ecosistema v2.0, Segmentación Geográfica Outbound (Hillsborough, Pinellas y Pasco) e Inserción de Prospectos Verificados",
+      "status": "COMPLETED",
+      "verification": "Upgrade a estándar Exo Advance v2.0 con respaldo preventivo, 6 prospectos reales de Florida cargados en Supabase leads y outbound.ts, soporte de click-to-call, Google Maps navigation, selector de condados y QA Gate PASS"
     }
   ],
   "in_progress": [],
   "priorities": [
-    "Subir a Git y desplegar en Vercel cuando el usuario lo ordene"
+    "Monitorear respuestas de prospectos en Tampa Bay y conversiones de llamadas directas"
   ],
   "decisions": [
     {

@@ -1,0 +1,48 @@
+{
+  "project": "website-exoadvance",
+  "description": "Memoria Inmunológica de Errores Resueltos (Anti-Regresión)",
+  "antidotes": [
+    {
+      "id": "ANT-001",
+      "symptom": "Next.js Hydration failed because the initial UI does not match what was rendered on the server",
+      "root_cause": "Uso directo de Date(), Math.random(), window o localStorage durante el primer renderizado SSR.",
+      "antidote": "Diferir lecturas dependientes del cliente dentro de un useEffect o estado mounted, o usar suppressHydrationWarning solo en timestamps.",
+      "tags": ["nextjs", "react", "hydration", "ssr"]
+    },
+    {
+      "id": "ANT-002",
+      "symptom": "Supabase PostgreSQL error: infinite recursion detected in policy for relation",
+      "root_cause": "Política RLS que hace un SELECT sobre la misma tabla protegida para verificar el rol o tenant del usuario.",
+      "antidote": "Encapsular la consulta de verificación de rol/tenant en una función SQL con SECURITY DEFINER o leer desde auth.jwt() -> app_metadata.",
+      "tags": ["supabase", "rls", "postgres", "security"]
+    },
+    {
+      "id": "ANT-003",
+      "symptom": "Stripe Webhook Error: No signatures found matching the expected signature for payload",
+      "root_cause": "El body del request fue parseado como JSON antes de pasarlo a stripe.webhooks.constructEvent.",
+      "antidote": "Leer el payload crudo con await req.text() (o Buffer) y pasarlo intacto junto al header stripe-signature.",
+      "tags": ["stripe", "webhooks", "backend", "payments"]
+    },
+    {
+      "id": "ANT-004",
+      "symptom": "React Server Components / Flight Protocol Deserialization RCE & Code Leak (CVE-2025-55182 / CVE-2025-55183)",
+      "root_cause": "Deserialización insegura en react-server-dom-* procesando Server Actions / RSC sin parches de seguridad críticos.",
+      "antidote": "Mantener React en >=19.0.4 o >=19.2.4 y Next.js en >=15.5.28 o >=16.3.8. Validar estrictamente los tipos de entrada en Server Actions con Zod en el boundary del servidor.",
+      "tags": ["react", "nextjs", "rsc", "server-actions", "cve", "infosec"]
+    },
+    {
+      "id": "ANT-005",
+      "symptom": "Next.js Image Optimization SSRF & Cache Poisoning (CVE-2026-94483 / CVE-2026-94543)",
+      "root_cause": "remotePatterns permisivos en next.config.* o rutas catch-all raíz en SSG/ISR que permiten sobreescribir el cache compartido o pivotar a IPs privadas.",
+      "antidote": "Restringir remotePatterns con protocolos estrictos (https) y hostnames explícitos sin wildcards abiertos. Evitar servir datos no cacheados sobre rutas catch-all raíz sin partición de cache.",
+      "tags": ["nextjs", "ssrf", "cache-poisoning", "cve", "infosec"]
+    },
+    {
+      "id": "ANT-006",
+      "symptom": "Node.js Permission Model Sandbox Escape & RCE (CVE-2026-58043 / CVE-2026-111497)",
+      "root_cause": "Traversals de prefijo en radix-tree de --permission o decodificación de streams Brotli manipulados.",
+      "antidote": "No depender únicamente del flag experimental --permission como barrera de seguridad dura para código no confiable; aislar en contenedores Linux/Docker y mantener Node.js en las últimas revisiones LTS (>=22.x/24.x).",
+      "tags": ["nodejs", "sandbox", "rce", "cve", "infosec"]
+    }
+  ]
+}

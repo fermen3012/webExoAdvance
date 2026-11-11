@@ -11,5 +11,9 @@
    - Si una funcionalidad legítimamente requiere una nueva propiedad, primero debe definirse y documentarse en el archivo de tipos correspondiente con su tipado exacto (evitando el uso de `any`).
    - Posteriormente se implementa en los componentes o servicios afectados.
 
-3. **Compilación Limpia (Zero Errors):**
+3. **Inmutabilidad de Contratos de Salida (Zod / Pydantic / DTOs / API Schemas):**
+   - Cualquier cambio propuesto que amenace, altere o rompa los esquemas de salida tipados que alimentan el frontend del SaaS (modelos de Pydantic, esquemas Zod, DTOs, payloads de Server Actions o vistas SQL) debe ser descartado o revertido automáticamente salvo autorización expresa de migración.
+   - Se debe preservar la compatibilidad retroactiva de la estructura de datos en todo momento.
+
+4. **Compilación Limpia (Zero Errors):**
    - El código debe compilar limpiamente sin errores de tipos ni advertencias críticas antes de dar la tarea por concluida (`node .agents/bin/verify.js`).

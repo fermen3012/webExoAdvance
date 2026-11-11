@@ -45,9 +45,9 @@
       "sample_files": [
         "src/app/actions/auth.ts",
         "src/app/actions/leads.ts",
-        "src/app/admin/leads/page.tsx",
-        "src/app/business-intelligence/page.tsx",
-        "src/app/contact/page.tsx"
+        "src/app/actions/local-seo.ts",
+        "src/app/actions/outbound.ts",
+        "src/app/admin/leads/page.tsx"
       ]
     },
     {
@@ -59,8 +59,8 @@
         "src/components/admin/admin-auth-guard.tsx",
         "src/components/admin/crm-dashboard.tsx",
         "src/components/admin/lead-detail-modal.tsx",
-        "src/components/admin/services-catalog-tab.tsx",
-        "src/components/layout/footer.tsx"
+        "src/components/admin/local-seo-audit-modal.tsx",
+        "src/components/admin/outbound-prospects-tab.tsx"
       ]
     },
     {
@@ -70,10 +70,10 @@
       "directory": "src/lib",
       "sample_files": [
         "src/lib/ai/agent.ts",
+        "src/lib/ai/orderpoint-knowledge.ts",
         "src/lib/email/send-email.ts",
-        "src/lib/products-data.ts",
-        "src/lib/security/rate-limiter.ts",
-        "src/lib/supabase/client.ts"
+        "src/lib/integrations/adapters/standalone-adapter.ts",
+        "src/lib/integrations/pos-router.ts"
       ]
     }
   ],
@@ -84,6 +84,6 @@
       "relation": "imports_and_uses"
     }
   ],
-  "last_synced": "2026-10-23T22:18:21.763Z",
-  "last_upgraded": "2026-10-23T22:18:21.364Z"
+  "last_synced": "2026-11-11T09:55:42.006Z",
+  "last_upgraded": "2026-11-11T09:55:41.558Z"
 }
