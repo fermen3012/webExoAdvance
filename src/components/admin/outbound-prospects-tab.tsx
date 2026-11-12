@@ -165,7 +165,10 @@ export function OutboundProspectsTab() {
       p.companyName.toLowerCase().includes(query) ||
       p.domain.toLowerCase().includes(query) ||
       p.contactName.toLowerCase().includes(query) ||
-      p.recipientEmail.toLowerCase().includes(query);
+      p.recipientEmail.toLowerCase().includes(query) ||
+      (p.city && p.city.toLowerCase().includes(query)) ||
+      (p.county && p.county.toLowerCase().includes(query)) ||
+      (p.address && p.address.toLowerCase().includes(query));
 
     const matchesTier = selectedTier === "all" || p.priorityTier === selectedTier;
     const matchesStatus = selectedStatus === "all" || p.status === selectedStatus;
@@ -245,7 +248,7 @@ export function OutboundProspectsTab() {
             <option value="all">📍 All Counties (Florida)</option>
             <option value="Hillsborough">Hillsborough (Tampa)</option>
             <option value="Pinellas">Pinellas (St. Pete / Clearwater)</option>
-            <option value="Pasco">Pasco (Wesley Chapel)</option>
+            <option value="Pasco">Pasco (Wesley Chapel / New Port Richey)</option>
           </select>
 
           {/* Priority Tier Filter */}

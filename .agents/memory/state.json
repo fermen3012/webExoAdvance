@@ -93,6 +93,12 @@
       "description": "Actualización Segura de Ecosistema v2.0, Segmentación Geográfica Outbound (Hillsborough, Pinellas y Pasco) e Inserción de Prospectos Verificados",
       "status": "COMPLETED",
       "verification": "Upgrade a estándar Exo Advance v2.0 con respaldo preventivo, 6 prospectos reales de Florida cargados en Supabase leads y outbound.ts, soporte de click-to-call, Google Maps navigation, selector de condados y QA Gate PASS"
+    },
+    {
+      "id": "M16",
+      "description": "Ampliación de Prospección en New Port Richey (Pasco County) con 9 Prospectos Verificados, Soporte Multilingüe Automático y Búsqueda por Ciudad",
+      "status": "COMPLETED",
+      "verification": "3 nuevos prospectos reales de New Port Richey en Supabase leads y outbound.ts, selector de 1 clic en auditoría, conmutador bilingüe EN/ES automático y QA Gate PASS"
     }
   ],
   "in_progress": [],

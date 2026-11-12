@@ -72,6 +72,27 @@ export const PRESET_SCOUTED_RESTAURANTS: ScoutedRestaurantPreset[] = [
     pos: "Clover POS",
     cuisine: "Mercado y Comida Italiana",
   },
+  {
+    companyName: "Toast Fresh Fast Fun",
+    city: "New Port Richey, FL",
+    county: "Pasco",
+    pos: "Toast POS",
+    cuisine: "Desayunos, Brunch & Griego",
+  },
+  {
+    companyName: "Grand Bakery & Cafe",
+    city: "New Port Richey, FL",
+    county: "Pasco",
+    pos: "Clover POS",
+    cuisine: "Panadería & Cafetería Artesanal",
+  },
+  {
+    companyName: "Christina's Restaurant",
+    city: "New Port Richey, FL",
+    county: "Pasco",
+    pos: "Clover POS",
+    cuisine: "Restaurante Familiar Tradicional",
+  },
 ];
 
 interface LocalSEOAuditModalProps {
