@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   generateLocalSEOAudit,
   LocalSEOAuditResult,
@@ -21,26 +21,108 @@ import {
   Zap,
 } from "lucide-react";
 
+export interface ScoutedRestaurantPreset {
+  companyName: string;
+  city: string;
+  county: string;
+  pos: string;
+  cuisine: string;
+}
+
+export const PRESET_SCOUTED_RESTAURANTS: ScoutedRestaurantPreset[] = [
+  {
+    companyName: "Stefanos Pizza & Pasta",
+    city: "Tampa, FL",
+    county: "Hillsborough",
+    pos: "Clover POS",
+    cuisine: "Pizzería e Italiana",
+  },
+  {
+    companyName: "El Churrascaso Grill",
+    city: "Tampa, FL",
+    county: "Hillsborough",
+    pos: "Toast POS",
+    cuisine: "Parrillada Latina / Asador",
+  },
+  {
+    companyName: "ROAM Steakhouse & Bar",
+    city: "St. Petersburg, FL",
+    county: "Pinellas",
+    pos: "Clover POS",
+    cuisine: "Steakhouse & Cortes Finos",
+  },
+  {
+    companyName: "Burger-ish Bar & Grill",
+    city: "St. Pete Beach, FL",
+    county: "Pinellas",
+    pos: "Clover POS",
+    cuisine: "Hamburguesas y Bar Playero",
+  },
+  {
+    companyName: "EggTown Breakfast & Brunch",
+    city: "Wesley Chapel, FL",
+    county: "Pasco",
+    pos: "Toast POS",
+    cuisine: "Desayunos & Brunch",
+  },
+  {
+    companyName: "Moschella's Italian Eatery & Market",
+    city: "Wesley Chapel, FL",
+    county: "Pasco",
+    pos: "Clover POS",
+    cuisine: "Mercado y Comida Italiana",
+  },
+];
+
 interface LocalSEOAuditModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultRestaurantName?: string;
+  defaultCity?: string;
+  defaultPOS?: string;
 }
 
 export function LocalSEOAuditModal({
   isOpen,
   onClose,
   defaultRestaurantName = "",
+  defaultCity = "Tampa, FL",
+  defaultPOS = "Toast POS",
 }: LocalSEOAuditModalProps) {
   const [restaurantName, setRestaurantName] = useState(defaultRestaurantName);
-  const [city, setCity] = useState("Tampa, FL");
+  const [city, setCity] = useState(defaultCity);
   const [cuisineType, setCuisineType] = useState("Pizzería / Restaurante");
-  const [currentPOS, setCurrentPOS] = useState("Toast POS");
+  const [currentPOS, setCurrentPOS] = useState(defaultPOS);
   const [isLoading, setIsLoading] = useState(false);
   const [audit, setAudit] = useState<LocalSEOAuditResult | null>(null);
   const [copiedType, setCopiedType] = useState<"whatsapp" | "email" | null>(null);
   const [indexNowStatus, setIndexNowStatus] = useState<string | null>(null);
   const [isPingingIndexNow, setIsPingingIndexNow] = useState(false);
+
+  // Sync state whenever props change or modal opens
+  useEffect(() => {
+    if (defaultRestaurantName) {
+      setRestaurantName(defaultRestaurantName);
+      const match = PRESET_SCOUTED_RESTAURANTS.find(
+        (p) => p.companyName.toLowerCase() === defaultRestaurantName.toLowerCase()
+      );
+      if (match) {
+        setCity(match.city);
+        setCurrentPOS(match.pos);
+        setCuisineType(match.cuisine);
+      } else {
+        if (defaultCity) setCity(defaultCity);
+        if (defaultPOS) setCurrentPOS(defaultPOS);
+      }
+    } else {
+      // Default to first scouted restaurant
+      const first = PRESET_SCOUTED_RESTAURANTS[0];
+      setRestaurantName(first.companyName);
+      setCity(first.city);
+      setCurrentPOS(first.pos);
+      setCuisineType(first.cuisine);
+    }
+  }, [defaultRestaurantName, defaultCity, defaultPOS, isOpen]);
 
   if (!isOpen) return null;
 
@@ -111,8 +193,48 @@ export function LocalSEOAuditModal({
           </button>
         </div>
 
+        {/* 1-Click Prospect Preset Selector */}
+        <div className="mt-4 p-3.5 rounded-xl bg-[#1E3A8A]/25 border border-[#00E5FF]/40">
+          <label className="block text-[11px] font-mono text-[#00E5FF] uppercase tracking-wider font-bold mb-1.5 flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#00E5FF]" />
+            <span>Seleccionar de la lista de prospectos detectados:</span>
+          </label>
+          <select
+            value={
+              PRESET_SCOUTED_RESTAURANTS.some((p) => p.companyName === restaurantName)
+                ? restaurantName
+                : "custom"
+            }
+            onChange={(e) => {
+              const val = e.target.value;
+              if (val === "custom") {
+                setRestaurantName("");
+                return;
+              }
+              const match = PRESET_SCOUTED_RESTAURANTS.find((p) => p.companyName === val);
+              if (match) {
+                setRestaurantName(match.companyName);
+                setCity(match.city);
+                setCurrentPOS(match.pos);
+                setCuisineType(match.cuisine);
+              }
+            }}
+            className="w-full bg-[#070B14] border border-[#00E5FF]/50 text-white rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#00E5FF] transition-all cursor-pointer"
+          >
+            {PRESET_SCOUTED_RESTAURANTS.map((p) => (
+              <option key={p.companyName} value={p.companyName}>
+                {p.companyName} ({p.city}) — {p.pos}
+              </option>
+            ))}
+            <option value="custom">✍️ Ingresar otro restaurante manualmente...</option>
+          </select>
+          <p className="text-[10px] text-slate-400 font-mono mt-1.5">
+            ⚡ Los datos se autocompletan de inmediato sin que tengas que escribir a mano.
+          </p>
+        </div>
+
         {/* Form Inputs */}
-        <form onSubmit={handleGenerate} className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-5 border-b border-white/10">
+        <form onSubmit={handleGenerate} className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4 pb-5 border-b border-white/10">
           <div>
             <label className="block text-[11px] font-mono text-slate-400 uppercase tracking-wider font-semibold mb-1">
               Nombre del Restaurante:

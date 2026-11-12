@@ -16,6 +16,7 @@ export interface OutboundReviewItem {
   address?: string;
   city?: string;
   county?: string;
+  preferredLocale?: "en" | "es";
   score: number;
   priorityTier: "tier_1_high" | "tier_2_medium" | "tier_3_low";
   status: "DISCOVERED" | "SCRAPED" | "READY_REVIEW" | "APPROVED" | "SENT" | "REPLIED" | "DISCARDED";
@@ -36,6 +37,10 @@ export interface OutboundReviewItem {
     body: string;
     groundedSignal: string;
     wordCount: number;
+  };
+  drafts?: {
+    en: { subject: string; body: string };
+    es: { subject: string; body: string };
   };
   gateStatus: {
     passed: boolean;
@@ -58,6 +63,7 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
     address: "10203 US-92, Tampa, FL 33610",
     city: "Tampa",
     county: "Hillsborough",
+    preferredLocale: "en",
     score: 95,
     priorityTier: "tier_1_high",
     status: "READY_REVIEW",
@@ -69,10 +75,20 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
       monthlyEstimatedLoss: 1150,
     },
     emailDraft: {
-      subject: "clover processing markups at Stefanos Pizza",
-      body: "Hola, vi que operan con Clover en Stefanos Pizza sobre la US-92 en Tampa. Las pizzerías de alto volumen suelen perder más de $1,100 mensuales entre porcentajes de procesamiento y apps de terceros. En Exo Advance diseñamos OrderPoint con 0% de comisiones por transacción y kioskos táctiles de autoservicio Samsung. Habla Fernando, ¿podemos pasar 10 minutos por su local para mostrarles el kiosko físico en funcionamiento sin compromiso?",
+      subject: "clover processing fees at Stefanos Pizza",
+      body: "Hi, saw you guys are operating on Clover at Stefanos Pizza on US-92 in Tampa. High-volume pizzerias typically give up $1,100 to $1,400 monthly in card processing deductions and third-party fees. We engineered OrderPoint with 0% transaction markups and fast 11-inch Samsung self-service kiosks. This is Fernando from Exo Advance in Tampa, could I drop by for a 10-minute in-person demo with our working counter kiosk this week?",
       groundedSignal: "Clover POS Active + High Counter Pizzeria Volume",
-      wordCount: 74,
+      wordCount: 71,
+    },
+    drafts: {
+      en: {
+        subject: "clover processing fees at Stefanos Pizza",
+        body: "Hi, saw you guys are operating on Clover at Stefanos Pizza on US-92 in Tampa. High-volume pizzerias typically give up $1,100 to $1,400 monthly in card processing deductions and third-party fees. We engineered OrderPoint with 0% transaction markups and fast 11-inch Samsung self-service kiosks. This is Fernando from Exo Advance in Tampa, could I drop by for a 10-minute in-person demo with our working counter kiosk this week?",
+      },
+      es: {
+        subject: "comisiones de Clover en Stefanos Pizza",
+        body: "Hola, vi que operan con Clover en Stefanos Pizza sobre la US-92 en Tampa. Las pizzerías de alto volumen suelen perder más de $1,100 mensuales entre porcentajes de procesamiento y apps de terceros. En Exo Advance diseñamos OrderPoint con 0% de comisiones por transacción y kioskos táctiles de autoservicio Samsung. Habla Fernando, ¿podemos pasar 10 minutos por su local para mostrarles el kiosko físico en funcionamiento sin compromiso?",
+      },
     },
     gateStatus: {
       passed: true,
@@ -91,6 +107,7 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
     address: "8425 W Hillsborough Ave, Tampa, FL 33615",
     city: "Tampa",
     county: "Hillsborough",
+    preferredLocale: "es",
     score: 93,
     priorityTier: "tier_1_high",
     status: "READY_REVIEW",
@@ -102,10 +119,20 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
       monthlyEstimatedLoss: 1420,
     },
     emailDraft: {
-      subject: "toast processing fees at El Churrascaso",
+      subject: "tarifas de Toast POS en El Churrascaso",
       body: "Hola, vi que operan con Toast POS en El Churrascaso Grill en W Hillsborough Ave. Con el volumen diario de cortes y platos que manejan, las tarifas de procesamiento y cargos por terminal de Toast se llevan más de $1,400 cada mes. Nuestro sistema OrderPoint elimina al 100% las comisiones por transacción e incluye kiosko de 11\" para pedidos rápidos. Habla Fernando de Exo Advance, ¿te gustaría que te mostremos una demo física en tu restaurante esta semana?",
       groundedSignal: "Toast POS Active + Latin Grill High Check Margin",
       wordCount: 78,
+    },
+    drafts: {
+      es: {
+        subject: "tarifas de Toast POS en El Churrascaso",
+        body: "Hola, vi que operan con Toast POS en El Churrascaso Grill en W Hillsborough Ave. Con el volumen diario de cortes y platos que manejan, las tarifas de procesamiento y cargos por terminal de Toast se llevan más de $1,400 cada mes. Nuestro sistema OrderPoint elimina al 100% las comisiones por transacción e incluye kiosko de 11\" para pedidos rápidos. Habla Fernando de Exo Advance, ¿te gustaría que te mostremos una demo física en tu restaurante esta semana?",
+      },
+      en: {
+        subject: "toast processing markups at El Churrascaso Grill",
+        body: "Hi team at El Churrascaso Grill on W Hillsborough Ave. Running high daily grill volume on Toast POS typically costs restaurants over $1,400 monthly just in credit card surcharges and terminal leases. OrderPoint provides 0% transaction commissions and counter self-service Samsung kiosks. This is Fernando from Exo Advance in Tampa, can I stop by for 10 minutes to show you our physical demo kiosk at your counter?",
+      },
     },
     gateStatus: {
       passed: true,
@@ -117,13 +144,14 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
     domain: "roamsteakhouse.com",
     url: "https://www.clover.com/online-ordering/roam-steakhouse-and-bar-st-petersburg",
     companyName: "ROAM Steakhouse & Bar",
-    contactName: "General Manager / Beverage Director",
-    contactRole: "Managing Partner",
-    recipientEmail: "contact@roamsteakhouse.com",
+    contactName: "Christian (General Manager)",
+    contactRole: "Managing Director & Partner",
+    recipientEmail: "christian@roamsaintpetes.com",
     phone: "(727) 346-5242",
     address: "3405 34th St N, St. Petersburg, FL 33713",
     city: "St. Petersburg",
     county: "Pinellas",
+    preferredLocale: "en",
     score: 89,
     priorityTier: "tier_1_high",
     status: "READY_REVIEW",
@@ -135,9 +163,19 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
     },
     emailDraft: {
       subject: "processing savings at ROAM Steakhouse",
-      body: "Hi team at ROAM Steakhouse, saw your setup on 34th St N in St. Petersburg operating on Clover. Given your premium check averages, percentage-based card fees erode thousands from bottom-line profitability every quarter. OrderPoint delivers native table QR ordering and counter stations with 0% transaction markups. This is Fernando from Exo Advance in Tampa Bay, would you be open to a quick 10-minute in-person walkthrough at your bar this week?",
+      body: "Hi Christian, saw your setup on 34th St N in St. Petersburg operating on Clover. Given your premium check averages, percentage-based card fees erode thousands from bottom-line profitability every quarter. OrderPoint delivers native table QR ordering and counter stations with 0% transaction markups. This is Fernando from Exo Advance in Tampa Bay, would you be open to a quick 10-minute in-person walkthrough at your bar this week?",
       groundedSignal: "Clover Station + High-Ticket Steakhouse Processing Loss",
       wordCount: 71,
+    },
+    drafts: {
+      en: {
+        subject: "processing savings at ROAM Steakhouse",
+        body: "Hi Christian, saw your setup on 34th St N in St. Petersburg operating on Clover. Given your premium check averages, percentage-based card fees erode thousands from bottom-line profitability every quarter. OrderPoint delivers native table QR ordering and counter stations with 0% transaction markups. This is Fernando from Exo Advance in Tampa Bay, would you be open to a quick 10-minute in-person walkthrough at your bar this week?",
+      },
+      es: {
+        subject: "ahorro en procesamiento de tarjetas en ROAM Steakhouse",
+        body: "Hola Christian, vi que operan en 34th St N en St. Petersburg con Clover. Con el ticket promedio de su menú, las comisiones bancarias porcentuales se llevan miles de dólares de ganancia cada trimestre. En Exo Advance creamos OrderPoint con 0% de comisiones por transacción y comandas directas a cocina en 50ms. Habla Fernando de Exo Advance, ¿te gustaría ver una demo de 10 minutos en tu barra esta semana?",
+      },
     },
     gateStatus: {
       passed: true,
@@ -156,6 +194,7 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
     address: "4755 Gulf Blvd, St. Pete Beach, FL 33706",
     city: "St. Pete Beach",
     county: "Pinellas",
+    preferredLocale: "en",
     score: 88,
     priorityTier: "tier_1_high",
     status: "READY_REVIEW",
@@ -170,6 +209,16 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
       body: "Hi Burger-ish team, noticed your location on Gulf Blvd in St. Pete Beach. Beach traffic rushes create heavy counter bottlenecks for takeout burgers and drinks. Our 11-inch Samsung self-service kiosks let beachgoers order and pay instantly in under 30 seconds with 0% transaction commissions. Can I stop by for a quick 10-minute demo with our physical kiosk at your counter this week?",
       groundedSignal: "Beachside Fast-Casual Flow + Clover POS + Peak Line Bottlenecks",
       wordCount: 68,
+    },
+    drafts: {
+      en: {
+        subject: "counter line bottlenecks at Burger-ish St. Pete Beach",
+        body: "Hi Burger-ish team, noticed your location on Gulf Blvd in St. Pete Beach. Beach traffic rushes create heavy counter bottlenecks for takeout burgers and drinks. Our 11-inch Samsung self-service kiosks let beachgoers order and pay instantly in under 30 seconds with 0% transaction commissions. Can I stop by for a quick 10-minute demo with our physical kiosk at your counter this week?",
+      },
+      es: {
+        subject: "filas en mostrador en Burger-ish St. Pete Beach",
+        body: "Hola equipo de Burger-ish, vi su local en Gulf Blvd en St. Pete Beach. En horas pico de playa se forman cuellos de botella en el mostrador para pedir hamburguesas y bebidas para llevar. Nuestros kioskos Samsung de 11\" permiten que los clientes pidan y paguen en 30 segundos con 0% de comisiones por transacción. Habla Fernando de Exo Advance, ¿puedo pasar 10 minutos a mostrarles el kiosko esta semana?",
+      },
     },
     gateStatus: {
       passed: true,
@@ -188,6 +237,7 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
     address: "27607 State Road 56, #110, Wesley Chapel, FL 33544",
     city: "Wesley Chapel",
     county: "Pasco",
+    preferredLocale: "en",
     score: 94,
     priorityTier: "tier_1_high",
     status: "READY_REVIEW",
@@ -204,6 +254,16 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
       groundedSignal: "Toast POS Active + Peak Breakfast Bottlenecks + Wesley Chapel Growth Corridor",
       wordCount: 84,
     },
+    drafts: {
+      en: {
+        subject: "toast terminal and processing fees at EggTown Wesley Chapel",
+        body: "Hi EggTown team, noticed your busy breakfast and brunch spot on SR 56 in Wesley Chapel running on Toast POS. High morning traffic with ticket customizations often results in steep Toast percentage deductions and hardware leases exceeding $1,300 monthly. OrderPoint equips your counter with high-speed 11-inch Samsung self-service kiosks and 0% card transaction markups. This is Fernando from Exo Advance in Tampa Bay, could I drop by for 10 minutes to show you our working counter kiosk this week?",
+      },
+      es: {
+        subject: "comisiones de Toast POS en EggTown Wesley Chapel",
+        body: "Hola equipo de EggTown, vi su concurrido local de desayunos y brunch en SR 56 en Wesley Chapel operando con Toast POS. Con el alto volumen matutino, Toast descuenta más de $1,300 al mes en comisiones porcentuales y alquiler de terminales. OrderPoint equipa su mostrador con kioskos Samsung de 11\" y 0% comisiones por transacción. Habla Fernando de Exo Advance, ¿puedo pasar 10 minutos a mostrarles el kiosko funcionando esta semana?",
+      },
+    },
     gateStatus: {
       passed: true,
       reasons: [],
@@ -216,11 +276,12 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
     companyName: "Moschella's Italian Eatery & Market",
     contactName: "General Manager / Owner",
     contactRole: "Managing Director",
-    recipientEmail: "info@moschellas.com",
+    recipientEmail: "moschellaswc@gmail.com",
     phone: "(813) 973-7500",
     address: "5648 Post Oak Blvd, Wesley Chapel, FL 33544",
     city: "Wesley Chapel",
     county: "Pasco",
+    preferredLocale: "en",
     score: 91,
     priorityTier: "tier_1_high",
     status: "READY_REVIEW",
@@ -235,6 +296,16 @@ const INITIAL_TARGET_PROSPECTS: OutboundReviewItem[] = [
       body: "Hi team at Moschella's, love the market and hot food counter on Post Oak Blvd in Wesley Chapel. With the lunch crowd ordering artisan sandwiches and prepared Italian specialties, counter lines can build up quickly while Clover takes a healthy cut on card processing. Our 11-inch Samsung kiosks let customers browse photos of combos, order, and pay instantly without staff intervention. This is Fernando from Exo Advance, could I visit for a 10-minute live demonstration at your counter this week?",
       groundedSignal: "Clover Station + High Counter Volume + Italian Specialty Market",
       wordCount: 83,
+    },
+    drafts: {
+      en: {
+        subject: "sandwich and prepared foods counter ordering at Moschella's",
+        body: "Hi team at Moschella's, love the market and hot food counter on Post Oak Blvd in Wesley Chapel. With the lunch crowd ordering artisan sandwiches and prepared Italian specialties, counter lines can build up quickly while Clover takes a healthy cut on card processing. Our 11-inch Samsung kiosks let customers browse photos of combos, order, and pay instantly without staff intervention. This is Fernando from Exo Advance, could I visit for a 10-minute live demonstration at your counter this week?",
+      },
+      es: {
+        subject: "pedidos rápidos de mostrador en Moschella's Wesley Chapel",
+        body: "Hola equipo de Moschella's, vi su mercado y mostrador de comidas preparadas en Post Oak Blvd en Wesley Chapel. En las horas del almuerzo se forman filas para ordenar sándwiches artesanales mientras Clover cobra altas comisiones por cada tarjeta. Nuestros kioskos táctiles Samsung permiten ver fotos del menú, pedir y pagar sin demoras y con 0% de comisiones. Habla Fernando de Exo Advance, ¿les gustaría ver una demo de 10 minutos en su local esta semana?",
+      },
     },
     gateStatus: {
       passed: true,

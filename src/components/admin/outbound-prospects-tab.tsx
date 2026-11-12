@@ -44,9 +44,12 @@ export function OutboundProspectsTab() {
   // Local SEO Audit Modal State
   const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [auditTargetName, setAuditTargetName] = useState("");
+  const [auditTargetCity, setAuditTargetCity] = useState("Tampa, FL");
+  const [auditTargetPOS, setAuditTargetPOS] = useState("Toast POS");
 
   // Human-in-the-Loop Modal State
   const [reviewingItem, setReviewingItem] = useState<OutboundReviewItem | null>(null);
+  const [reviewLocale, setReviewLocale] = useState<"en" | "es">("en");
   const [subjectInput, setSubjectInput] = useState("");
   const [bodyInput, setBodyInput] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -68,10 +71,26 @@ export function OutboundProspectsTab() {
 
   const openReviewModal = (item: OutboundReviewItem) => {
     setReviewingItem(item);
-    setSubjectInput(item.emailDraft.subject);
-    setBodyInput(item.emailDraft.body);
+    const initialLocale = item.preferredLocale || (item.companyName.toLowerCase().includes("churrascaso") ? "es" : "en");
+    setReviewLocale(initialLocale);
+
+    if (item.drafts && item.drafts[initialLocale]) {
+      setSubjectInput(item.drafts[initialLocale].subject);
+      setBodyInput(item.drafts[initialLocale].body);
+    } else {
+      setSubjectInput(item.emailDraft.subject);
+      setBodyInput(item.emailDraft.body);
+    }
     setSendSuccessMessage(null);
     setSendErrorMessage(null);
+  };
+
+  const handleSwitchLocale = (targetLocale: "en" | "es") => {
+    setReviewLocale(targetLocale);
+    if (reviewingItem?.drafts && reviewingItem.drafts[targetLocale]) {
+      setSubjectInput(reviewingItem.drafts[targetLocale].subject);
+      setBodyInput(reviewingItem.drafts[targetLocale].body);
+    }
   };
 
   const closeReviewModal = () => {
@@ -260,7 +279,16 @@ export function OutboundProspectsTab() {
           <button
             type="button"
             onClick={() => {
-              setAuditTargetName("");
+              const target = filtered[0] || prospects[0];
+              setAuditTargetName(target?.companyName || "");
+              setAuditTargetCity(target?.city ? `${target.city}, FL` : "Tampa, FL");
+              setAuditTargetPOS(
+                target?.signals?.hasToastPOS
+                  ? "Toast POS"
+                  : target?.signals?.hasCloverPOS
+                  ? "Clover POS"
+                  : "Toast POS"
+              );
               setIsAuditModalOpen(true);
             }}
             className="bg-[#1E3A8A] hover:bg-[#1E3A8A]/80 border border-[#00E5FF] text-white px-3.5 py-2 rounded-xl text-xs font-mono font-bold flex items-center gap-1.5 transition-all shadow-[0_0_15px_rgba(0,229,255,0.25)] shrink-0 cursor-pointer"
@@ -434,10 +462,18 @@ export function OutboundProspectsTab() {
                       type="button"
                       onClick={() => {
                         setAuditTargetName(item.companyName);
+                        setAuditTargetCity(item.city ? `${item.city}, FL` : "Tampa, FL");
+                        setAuditTargetPOS(
+                          item.signals?.hasToastPOS
+                            ? "Toast POS"
+                            : item.signals?.hasCloverPOS
+                            ? "Clover POS"
+                            : "Toast POS"
+                        );
                         setIsAuditModalOpen(true);
                       }}
                       className="p-2.5 rounded-xl bg-[#1E3A8A]/30 hover:bg-[#1E3A8A]/70 border border-[#00E5FF]/30 hover:border-[#00E5FF] text-[#00E5FF] transition-all"
-                      title="Generar Auditoría Google Maps"
+                      title="Generar Auditoría Google Maps en 1 Clic"
                     >
                       <MapPin className="w-3.5 h-3.5" />
                     </button>
@@ -517,6 +553,51 @@ export function OutboundProspectsTab() {
               <div className="flex items-center gap-1.5 text-emerald-400">
                 <Check className="w-3.5 h-3.5" />
                 <span>Signal-Grounded</span>
+              </div>
+            </div>
+
+            {/* Automatic Language Selector Bar */}
+            <div className="mb-5 p-3.5 rounded-2xl bg-[#0A0F1A] border border-[#00E5FF]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-semibold block">
+                  Idioma del Mensaje
+                </span>
+                <span className="text-[11px] font-mono text-[#00E5FF] flex items-center gap-1.5 mt-0.5">
+                  <Sparkles className="w-3 h-3 text-[#00E5FF]" />
+                  <span>
+                    Auto-detectado:{" "}
+                    <strong className="text-white">
+                      {reviewingItem.preferredLocale === "es"
+                        ? "Español 🇪🇸 (Gastronomía Latina / Empatía Cultural)"
+                        : "English 🇺🇸 (Standard Market / Números Directos)"}
+                    </strong>
+                  </span>
+                </span>
+              </div>
+
+              <div className="flex items-center gap-1.5 bg-[#070B14] p-1 rounded-xl border border-white/10 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => handleSwitchLocale("en")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    reviewLocale === "en"
+                      ? "bg-[#1E3A8A] text-[#00E5FF] border border-[#00E5FF]/40 shadow-[0_0_10px_rgba(0,229,255,0.2)]"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <span>🇺🇸 English</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSwitchLocale("es")}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                    reviewLocale === "es"
+                      ? "bg-[#1E3A8A] text-[#00E5FF] border border-[#00E5FF]/40 shadow-[0_0_10px_rgba(0,229,255,0.2)]"
+                      : "text-slate-400 hover:text-white"
+                  }`}
+                >
+                  <span>🇪🇸 Español</span>
+                </button>
               </div>
             </div>
 
@@ -638,6 +719,8 @@ export function OutboundProspectsTab() {
         isOpen={isAuditModalOpen}
         onClose={() => setIsAuditModalOpen(false)}
         defaultRestaurantName={auditTargetName}
+        defaultCity={auditTargetCity}
+        defaultPOS={auditTargetPOS}
       />
     </div>
   );
